@@ -1,0 +1,6 @@
+{
+  "name": "MDM Billing & Attendance — GUHS Malda",
+  "description": "Mid-Day Meal (PM POSHAN) daily attendance, consumption abstract, MDCF, Odia Form-15, Millet Laddoo reports, and voucher receipts for primary, upper primary, and secondary classes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

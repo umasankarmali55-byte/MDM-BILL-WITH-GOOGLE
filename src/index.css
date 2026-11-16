@@ -1,0 +1,229 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: "Public Sans", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  .font-mono-num {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Statutory Printable Paper Styling (Always crisp white paper & ink black) */
+.paper-sheet {
+  background: #ffffff;
+  color: #000000;
+  font-family: "Noto Sans Oriya", "Nirmala UI", "Kalinga", "Public Sans", sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+  width: 794px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 14px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.dark .paper-sheet {
+  border-color: #334155;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+
+.paper-sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #000000;
+  box-sizing: border-box;
+}
+
+.paper-sheet th,
+.paper-sheet td {
+  border: 1.5px solid #000000;
+  padding: 3px 4px;
+  text-align: center;
+  color: #000000;
+  font-weight: 700;
+}
+
+/* 19-column Student Enrollment & Beneficiary tables — guaranteed fit inside 794px page */
+.paper-sheet table.stu-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.paper-sheet table.stu-table th,
+.paper-sheet table.stu-table td {
+  padding: 2px 1px;
+  font-size: 10.5px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.paper-sheet table.stu-table thead tr:first-child th {
+  font-size: 11px;
+  padding: 3px 2px;
+}
+
+.paper-sheet table.stu-table thead tr:nth-child(2) th {
+  font-size: 10px;
+  padding: 2px 1px;
+}
+
+.paper-sheet table.stu-table thead tr:nth-child(3) th {
+  font-size: 9px;
+  padding: 2px 0;
+  letter-spacing: -0.02em;
+}
+
+.paper-sheet table.stu-table tbody td {
+  font-size: 11px;
+}
+
+.paper-sheet table.stu-table tbody td.l {
+  padding-left: 4px !important;
+  padding-right: 2px !important;
+  font-size: 10px;
+}
+
+.paper-sheet td.l {
+  text-align: left;
+}
+
+.paper-sheet td.r {
+  color: #c00000;
+  font-weight: 800;
+}
+
+.paper-sheet td.g {
+  background-color: #d9d9d9;
+}
+
+.paper-sheet tr.z td,
+.paper-sheet tr.blk td,
+.paper-sheet tr.k td {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.paper-sheet tr.k td.g {
+  background-color: #d9d9d9;
+  color: #000000;
+}
+
+.paper-sheet [contenteditable="true"]:hover {
+  background-color: #fef9c3 !important;
+  cursor: text;
+}
+
+.paper-sheet [contenteditable="true"]:focus {
+  outline: 2px solid #d97706;
+  background-color: #fef08a !important;
+}
+
+.paper-sheet .fi {
+  display: inline-block;
+  border-bottom: 1.6px dotted #000000;
+  padding: 0 6px;
+  text-align: center;
+  font-weight: 800;
+  line-height: 1.35;
+  vertical-align: baseline;
+}
+
+.paper-sheet .fi:empty::before {
+  content: attr(data-ph);
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 0.85em;
+}
+
+.paper-sheet .fl {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: 3px 0;
+}
+
+.paper-sheet .fl span {
+  white-space: nowrap;
+}
+
+.paper-sheet .fl b {
+  flex: 1;
+  border-bottom: 1.5px solid #000000;
+  padding: 0 6px;
+  text-align: center;
+}
+
+/* Print Layout Engine */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .paper-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .paper-sheet .fi:empty::before {
+    content: "" !important;
+  }
+
+  .paper-sheet [contenteditable="true"] {
+    background-color: transparent !important;
+  }
+
+  .exp-page {
+    width: 100%;
+    page-break-after: always;
+    break-after: page;
+    padding: 0;
+    margin: 0;
+  }
+
+  .exp-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+}
