@@ -19,6 +19,7 @@ import {
   LaddooIngredientsReceiptSheet,
 } from './reports/VouchersView';
 import { AbstractView } from './AbstractView';
+import { applyA4PrintFit, clearA4PrintFit } from '../utils/printFit';
 
 export type ExportPackType = 'primary' | 'secondary' | 'vouchers' | 'sec_vouchers';
 
@@ -35,15 +36,20 @@ export const ExportPackView: React.FC<ExportPackViewProps> = ({
 }) => {
   useEffect(() => {
     const handleAfterPrint = () => {
+      clearA4PrintFit();
       onDone();
     };
+    window.addEventListener('beforeprint', applyA4PrintFit);
     window.addEventListener('afterprint', handleAfterPrint, { once: true });
     const timer = setTimeout(() => {
+      applyA4PrintFit();
       window.print();
     }, 250);
     return () => {
       clearTimeout(timer);
+      window.removeEventListener('beforeprint', applyA4PrintFit);
       window.removeEventListener('afterprint', handleAfterPrint);
+      clearA4PrintFit();
     };
   }, [onDone]);
 

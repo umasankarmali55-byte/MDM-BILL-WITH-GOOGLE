@@ -18,6 +18,7 @@ import {
   parseMonthKey,
 } from './utils/calculations';
 import { Sidebar, TAB_TITLES } from './components/Sidebar';
+import { applyA4PrintFit, clearA4PrintFit } from './utils/printFit';
 import { AttendanceView } from './components/AttendanceView';
 import { NormsMenuView } from './components/NormsMenuView';
 import { SchoolDetailsView } from './components/SchoolDetailsView';
@@ -82,6 +83,15 @@ export default function App() {
       // Ignore
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    window.addEventListener('beforeprint', applyA4PrintFit);
+    window.addEventListener('afterprint', clearA4PrintFit);
+    return () => {
+      window.removeEventListener('beforeprint', applyA4PrintFit);
+      window.removeEventListener('afterprint', clearA4PrintFit);
+    };
+  }, []);
 
   useEffect(() => {
     const onOutsideClick = (e: MouseEvent) => {

@@ -153,7 +153,7 @@ export const FuelGroceryVegReceiptSheet: React.FC<VoucherProps> = ({
   const { R, g, I, d2, mon, cn } = D;
 
   const intro = (item: string) => (
-    <div style={{ lineHeight: 2 }}>
+    <div className="v-intro" style={{ lineHeight: 1.8 }}>
       ମୁଁ ଶ୍ରୀ/ଶ୍ରୀମତୀ{' '}
       <span
         className="fi"
@@ -204,14 +204,14 @@ export const FuelGroceryVegReceiptSheet: React.FC<VoucherProps> = ({
 
   return (
     <div
-      className="paper-sheet"
+      className="paper-sheet voucher-3up"
       style={{
-        fontSize: '13.5px',
-        lineHeight: 1.9,
+        fontSize: '13px',
+        lineHeight: 1.75,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        gap: '12px',
+        gap: '10px',
       }}
     >
       {/* 1. Fuel Receipt */}
@@ -382,7 +382,7 @@ export const LaddooIngredientsReceiptSheet: React.FC<VoucherProps> = ({
 
   return (
     <div
-      className="paper-sheet"
+      className="paper-sheet voucher-1up"
       style={{
         fontSize: '13.5px',
         lineHeight: 2,
@@ -427,7 +427,7 @@ export const LaddooIngredientsReceiptSheet: React.FC<VoucherProps> = ({
           ପୋଷଣ ଯୁକ୍ତ ମାଣ୍ଡିଆ ଲଡୁ ରସିଦ
         </div>
 
-        <div style={{ fontSize: '17px', lineHeight: 2.2 }}>
+        <div className="v-body" style={{ fontSize: '17px', lineHeight: 2.2 }}>
           ଲିଖିତଂ ରସିଦ ଏହିକି ମୁଁ ଶ୍ରୀ / ଶ୍ରୀମତୀ{' '}
           <span
             className="fi"
@@ -514,7 +514,7 @@ export const LaddooCookWageReceiptSheet: React.FC<VoucherProps> = ({
 
   return (
     <div
-      className="paper-sheet"
+      className="paper-sheet voucher-1up"
       style={{
         fontSize: '13.5px',
         lineHeight: 2,
@@ -559,7 +559,7 @@ export const LaddooCookWageReceiptSheet: React.FC<VoucherProps> = ({
           ପୋଷଣ ଯୁକ୍ତ ମାଣ୍ଡିଆ ଲଡୁ ପ୍ରସ୍ତୁତ କରିବା ରସିଦ
         </div>
 
-        <div style={{ fontSize: '17px', lineHeight: 2.4 }}>
+        <div className="v-body" style={{ fontSize: '17px', lineHeight: 2.4 }}>
           ଲିଖିତଂ ରସିଦ ଏହିକି ଆମ୍ଭେ ଶ୍ରୀମତୀ{' '}
           <span className="fi" style={{ minWidth: '300px' }}>
             {D.cooks}
