@@ -31,6 +31,13 @@ interface ExportPackViewProps {
   onDone: () => void;
 }
 
+const PACK_LABELS: Record<ExportPackType, string> = {
+  primary: 'Primary Export Pack (7 sheets)',
+  secondary: 'Secondary Export Pack (5 sheets)',
+  vouchers: 'Primary Vouchers Pack (3 sheets)',
+  sec_vouchers: 'Secondary Vouchers Pack (3 sheets)',
+};
+
 export const ExportPackView: React.FC<ExportPackViewProps> = ({
   pack,
   state,
@@ -40,23 +47,14 @@ export const ExportPackView: React.FC<ExportPackViewProps> = ({
   const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
-    const handleAfterPrint = () => {
-      clearA4PrintFit();
-      onDone();
-    };
     window.addEventListener('beforeprint', applyA4PrintFit);
-    window.addEventListener('afterprint', handleAfterPrint, { once: true });
-    const timer = setTimeout(() => {
-      applyA4PrintFit();
-      window.print();
-    }, 250);
+    window.addEventListener('afterprint', clearA4PrintFit);
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('beforeprint', applyA4PrintFit);
-      window.removeEventListener('afterprint', handleAfterPrint);
+      window.removeEventListener('afterprint', clearA4PrintFit);
       clearA4PrintFit();
     };
-  }, [onDone]);
+  }, []);
 
   const handleDownloadPackPdf = async () => {
     if (!packRef.current || downloading) return;
@@ -68,41 +66,50 @@ export const ExportPackView: React.FC<ExportPackViewProps> = ({
     }
   };
 
+  const handlePrintPack = () => {
+    applyA4PrintFit();
+    setTimeout(() => window.print(), 20);
+  };
+
   return (
-    <div ref={packRef} className="bg-white min-h-screen p-0">
-      <div className="no-print fixed top-4 right-4 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2.5 text-sm font-medium">
-        <span>Preparing PDF export pack...</span>
-        <button
-          type="button"
-          disabled={downloading}
-          onClick={handleDownloadPackPdf}
-          className="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 disabled:opacity-60 text-xs font-semibold inline-flex items-center gap-1.5"
-        >
-          {downloading ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <FileDown className="w-3.5 h-3.5" />
-          )}
-          <span>{downloading ? 'Saving...' : 'Download PDF'}</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            applyA4PrintFit();
-            window.print();
-          }}
-          className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold inline-flex items-center gap-1"
-        >
-          <Printer className="w-3.5 h-3.5" />
-          <span>Print</span>
-        </button>
-        <button
-          type="button"
-          onClick={onDone}
-          className="px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-xs font-semibold"
-        >
-          Return to app
-        </button>
+    <div
+      ref={packRef}
+      className="print-pack-root bg-slate-100 dark:bg-slate-950 min-h-screen py-6 px-4 space-y-6 overflow-x-auto"
+    >
+      <div className="no-print sticky top-3 z-50 max-w-[794px] mx-auto bg-slate-900/95 backdrop-blur-md text-white px-4 py-2.5 rounded-lg shadow-xl flex flex-wrap items-center justify-between gap-2.5 text-sm font-medium">
+        <span className="font-semibold text-slate-100">
+          {PACK_LABELS[pack]}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            disabled={downloading}
+            onClick={handleDownloadPackPdf}
+            className="px-3 py-1.5 rounded bg-rose-600 hover:bg-rose-500 disabled:opacity-60 text-xs font-semibold inline-flex items-center gap-1.5"
+          >
+            {downloading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <FileDown className="w-3.5 h-3.5" />
+            )}
+            <span>{downloading ? 'Saving PDF...' : 'Download PDF'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handlePrintPack}
+            className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold inline-flex items-center gap-1.5"
+          >
+            <Printer className="w-3.5 h-3.5" />
+            <span>Print</span>
+          </button>
+          <button
+            type="button"
+            onClick={onDone}
+            className="px-3 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-xs font-semibold"
+          >
+            Return to app
+          </button>
+        </div>
       </div>
 
       {pack === 'primary' && (

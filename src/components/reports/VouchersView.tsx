@@ -388,7 +388,6 @@ export const LaddooIngredientsReceiptSheet: React.FC<VoucherProps> = ({
         lineHeight: 2,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
         gap: '16px',
       }}
     >
@@ -521,7 +520,6 @@ export const LaddooCookWageReceiptSheet: React.FC<VoucherProps> = ({
         lineHeight: 2,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
         gap: '16px',
       }}
     >

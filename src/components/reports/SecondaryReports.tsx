@@ -68,7 +68,7 @@ export const Form15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
           marginTop: '4px',
         }}
       >
-        <table style={{ border: '2px solid #000' }}>
+        <table className="f15-att" style={{ border: '2px solid #000' }}>
           <thead>
             <tr>
               <th colSpan={5} style={{ fontSize: '13px' }}>
@@ -172,7 +172,7 @@ export const Form15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
             {d1}-ଠାରୁ-{d2}-ଖର୍ଚ୍ଚ କରାଗଲା
           </div>
 
-          <table style={{ border: '2px solid #000', marginTop: '6px' }}>
+          <table className="f15-items" style={{ border: '2px solid #000', marginTop: '8px' }}>
             <thead>
               <tr>
                 <th style={{ width: '9%' }}>କ୍ର. ନଂ</th>
@@ -249,7 +249,8 @@ export const Form15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
           </div>
 
           <table
-            style={{ width: '62%', marginTop: '14px', border: '2px solid #000' }}
+            className="f15-sum"
+            style={{ width: '68%', marginTop: '16px', border: '2px solid #000' }}
           >
             <thead>
               <tr>
@@ -321,7 +322,7 @@ export const Form15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', fontWeight: 700, margin: 'auto 0 0', paddingTop: '14px' }}>
+      <p style={{ textAlign: 'center', fontWeight: 700, margin: '14px 0 0' }}>
         ଏହା ଦ୍ୱାରା ପ୍ରମାଣ କରୁଛି ଉପର ଲିଖିତ ସମସ୍ତ ତଥ୍ୟ ସତ୍ୟ ଅଟେ ଓ ଆମ ବିଦ୍ୟାଳୟ
         ଭୋଜନ ନିୟମିତ ସୁଚାରୁ ରୂପେ ପରିଚାଳିତ କରାଯାଇଛି ।
       </p>
@@ -329,7 +330,7 @@ export const Form15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '34px',
+          marginTop: '32px',
           fontSize: '11px',
           fontWeight: 700,
           gap: '10px',
@@ -401,7 +402,7 @@ export const SecondaryReportSheet: React.FC<SheetProps> = ({ state }) => {
   );
 
   return (
-    <div className="paper-sheet monthly-report">
+    <div className="paper-sheet report-sheet" style={{ fontSize: '12px' }}>
       <div>
       <div
         style={{
@@ -807,7 +808,7 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
           marginTop: '4px',
         }}
       >
-        <table style={{ border: '2px solid #000' }}>
+        <table className="f15-att" style={{ border: '2px solid #000' }}>
           <thead>
             <tr>
               <th colSpan={6} style={{ fontSize: '13px' }}>
@@ -931,7 +932,7 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
             {d1}-ଠାରୁ-{d2}-ପର୍ଯ୍ୟନ୍ତ ଖର୍ଚ୍ଚ କରାଗଲା ।
           </div>
 
-          <table style={{ border: '2px solid #000', marginTop: '4px' }}>
+          <table className="f15-items" style={{ border: '2px solid #000', marginTop: '6px' }}>
             <thead>
               <tr>
                 <th style={{ width: '9%' }}>କ୍ର. ନଂ</th>
@@ -977,8 +978,8 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
           <div
             style={{
               border: '2px solid #000',
-              marginTop: '46px',
-              padding: '6px',
+              marginTop: '18px',
+              padding: '8px',
             }}
           >
             <div className="ec" style={{ fontSize: '15px', fontWeight: 800 }}>
@@ -998,8 +999,8 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
               className="ec"
               style={{
                 borderTop: '1px solid #000',
-                marginTop: '4px',
-                paddingTop: '4px',
+                marginTop: '6px',
+                paddingTop: '6px',
                 fontSize: '12px',
                 fontWeight: 800,
               }}
@@ -1010,7 +1011,7 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
             </div>
           </div>
 
-          <table style={{ width: '100%', marginTop: '24px', border: '2px solid #000' }}>
+          <table className="f15-sum" style={{ width: '100%', marginTop: '18px', border: '2px solid #000' }}>
             <tbody>
               <tr>
                 <td className="l">୧) ମୋଟ ଉପସ୍ଥାନ:-</td>
@@ -1036,7 +1037,7 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', fontWeight: 700, margin: 'auto 0 0', paddingTop: '14px' }}>
+      <p style={{ textAlign: 'center', fontWeight: 700, margin: '14px 0 0' }}>
         ଏହା ଦ୍ୱାରା ପ୍ରମାଣ କରୁଛି ଉପର ଲିଖିତ ସମସ୍ତ ତଥ୍ୟ ସତ୍ୟ ଅଟେ ଓ ଆମ ବିଦ୍ୟାଳୟ
         ଭୋଜନ ନିୟମିତ ସୁଚାରୁ ରୂପେ ପରିଚାଳିତ କରାଯାଇଛି ।
       </p>
@@ -1044,7 +1045,7 @@ export const LaddooForm15SecondarySheet: React.FC<SheetProps> = ({ state }) => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '34px',
+          marginTop: '32px',
           fontSize: '11px',
           fontWeight: 700,
           gap: '10px',

@@ -47,19 +47,20 @@ export const AbstractSheet: React.FC<{
 
     return (
       <div className="paper-sheet abs-sheet">
-        <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '5px', marginBottom: '6px' }}>
+        <div>
+        <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
           <div className="ec" style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '0.02em' }}>
             {I.school}
           </div>
-          <div className="ec" style={{ fontSize: '10.5px', fontWeight: 700, marginTop: '1px' }}>
+          <div className="ec" style={{ fontSize: '10.5px', fontWeight: 700, marginTop: '2px' }}>
             Block: {I.block} · District: {I.dist} · UDISE: {I.code}
           </div>
-          <div className="ec" style={{ fontSize: '12.5px', fontWeight: 800, marginTop: '3px' }}>
+          <div className="ec" style={{ fontSize: '12.5px', fontWeight: 800, marginTop: '4px' }}>
             SECONDARY (CLASS 9 &amp; 10) ABSTRACT CONSUMPTION STATEMENT — {monLabel}
           </div>
         </div>
 
-        <table style={{ marginBottom: '6px' }}>
+        <table style={{ marginBottom: '4px' }}>
           <tbody>
             <tr>
               <td className="l" style={{ width: '25%' }}>
@@ -77,6 +78,7 @@ export const AbstractSheet: React.FC<{
             </tr>
           </tbody>
         </table>
+        </div>
 
         <table id="abs2">
           <colgroup>
@@ -186,23 +188,24 @@ export const AbstractSheet: React.FC<{
           </tbody>
         </table>
 
-        <div className="ec" style={{ fontSize: '9.5px', marginTop: '5px', fontWeight: 600 }}>
-          Note: Quantities are derived from daily attendance, statutory norms, and weekly menu. Vegetables adjust automatically to match exact per-meal entitlement.
-        </div>
+        <div style={{ marginTop: '8px' }}>
+          <div className="ec" style={{ fontSize: '10px', fontWeight: 600 }}>
+            Note: Quantities are derived from daily attendance, statutory norms, and weekly menu. Vegetables adjust automatically to match exact per-meal entitlement.
+          </div>
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginTop: 'auto',
-            paddingTop: '24px',
-            fontSize: '11px',
-            fontWeight: 800,
-          }}
-        >
-          <span className="ec">SHG / SMC President Signature</span>
-          <span className="ec">MDM In-Charge Signature</span>
-          <span className="ec">Headmaster / Headmistress (Seal &amp; Sign)</span>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '34px',
+              fontSize: '11px',
+              fontWeight: 800,
+            }}
+          >
+            <span className="ec">SHG / SMC President Signature</span>
+            <span className="ec">MDM In-Charge Signature</span>
+            <span className="ec">Headmaster / Headmistress (Seal &amp; Sign)</span>
+          </div>
         </div>
       </div>
     );
@@ -303,19 +306,20 @@ export const AbstractSheet: React.FC<{
 
   return (
     <div className="paper-sheet abs-sheet">
-      <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '5px', marginBottom: '6px' }}>
+      <div>
+      <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
         <div className="ec" style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '0.02em' }}>
           {I.school}
         </div>
-        <div className="ec" style={{ fontSize: '10.5px', fontWeight: 700, marginTop: '1px' }}>
+        <div className="ec" style={{ fontSize: '10.5px', fontWeight: 700, marginTop: '2px' }}>
           Block: {I.block} · District: {I.dist} · UDISE: {I.code}
         </div>
-        <div className="ec" style={{ fontSize: '12.5px', fontWeight: 800, marginTop: '3px' }}>
+        <div className="ec" style={{ fontSize: '12.5px', fontWeight: 800, marginTop: '4px' }}>
           PRIMARY &amp; UPPER PRIMARY ABSTRACT CONSUMPTION STATEMENT — {monLabel}
         </div>
       </div>
 
-      <table style={{ marginBottom: '6px' }}>
+      <table style={{ marginBottom: '4px' }}>
         <tbody>
           <tr>
             <td className="l" style={{ width: '25%' }}>
@@ -333,6 +337,7 @@ export const AbstractSheet: React.FC<{
           </tr>
         </tbody>
       </table>
+      </div>
 
       <table id="abt">
         <colgroup>
@@ -474,23 +479,24 @@ export const AbstractSheet: React.FC<{
         </tbody>
       </table>
 
-      <div className="ec" style={{ fontSize: '9.5px', marginTop: '5px', fontWeight: 600 }}>
-        Note: Quantities come from attendance, norms, and weekly menu. Amount = quantity × price per kg; vegetables take the remaining per-meal entitlement. Total includes laddoo.
-      </div>
+      <div style={{ marginTop: '8px' }}>
+        <div className="ec" style={{ fontSize: '10px', fontWeight: 600 }}>
+          Note: Quantities come from attendance, norms, and weekly menu. Amount = quantity × price per kg; vegetables take the remaining per-meal entitlement. Total includes laddoo.
+        </div>
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: 'auto',
-          paddingTop: '24px',
-          fontSize: '11px',
-          fontWeight: 800,
-        }}
-      >
-        <span className="ec">SHG / SMC President Signature</span>
-        <span className="ec">MDM In-Charge Signature</span>
-        <span className="ec">Headmaster / Headmistress (Seal &amp; Sign)</span>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '32px',
+            fontSize: '11px',
+            fontWeight: 800,
+          }}
+        >
+          <span className="ec">SHG / SMC President Signature</span>
+          <span className="ec">MDM In-Charge Signature</span>
+          <span className="ec">Headmaster / Headmistress (Seal &amp; Sign)</span>
+        </div>
       </div>
     </div>
   );

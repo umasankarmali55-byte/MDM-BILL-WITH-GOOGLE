@@ -93,7 +93,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
           marginTop: '4px',
         }}
       >
-        <table className="f15-left-14" style={{ border: '2px solid #000' }}>
+        <table className="f15-att" style={{ border: '2px solid #000' }}>
           <thead>
             <tr>
               <th colSpan={14} style={{ fontSize: '15px', height: '30px' }}>
@@ -232,7 +232,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
             {dStart}-ଠାରୁ-{dEnd}-ପର୍ଯ୍ୟନ୍ତ ଖର୍ଚ୍ଚ କରାଗଲା ।
           </div>
 
-          <table style={{ border: '2px solid #000', marginTop: '4px' }}>
+          <table className="f15-items" style={{ border: '2px solid #000', marginTop: '6px' }}>
             <thead>
               <tr style={{ fontSize: '11px' }}>
                 <th style={{ width: '9%' }}>କ୍ରମ ନଂ</th>
@@ -267,8 +267,8 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
           <div
             style={{
               border: '2px solid #000',
-              marginTop: '72px',
-              padding: '6px',
+              marginTop: '24px',
+              padding: '8px',
             }}
           >
             <div className="ec" style={{ textAlign: 'center', fontWeight: 700 }}>
@@ -289,8 +289,8 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
               className="ec"
               style={{
                 borderTop: '1px solid #000',
-                marginTop: '4px',
-                paddingTop: '4px',
+                marginTop: '6px',
+                paddingTop: '6px',
                 fontWeight: 700,
                 fontSize: '12px',
               }}
@@ -306,7 +306,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
               fontSize: '15px',
               fontWeight: 700,
               lineHeight: 1.5,
-              margin: '24px 0 0 16px',
+              margin: '18px 0 0 16px',
               textAlign: 'left',
             }}
           >
@@ -332,7 +332,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', fontWeight: 700, margin: 'auto 0 0', paddingTop: '14px' }}>
+      <p style={{ textAlign: 'center', fontWeight: 700, margin: '14px 0 0' }}>
         ଏହା ଦ୍ୱାରା ପ୍ରମାଣ କରୁଛି ଉପର ଲିଖିତ ସମସ୍ତ ତଥ୍ୟ ସତ୍ୟ ଅଟେ ଓ ଆମ ବିଦ୍ୟାଳୟ
         ଭୋଜନ ନିୟମିତ ସୁଚାରୁ ରୂପେ ପରିଚାଳିତ କରାଯାଇଛି ।
       </p>
@@ -340,7 +340,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '34px',
+          marginTop: '32px',
           fontSize: '11px',
           fontWeight: 700,
           gap: '10px',
@@ -413,7 +413,7 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
   );
 
   return (
-    <div className="paper-sheet monthly-report">
+    <div className="paper-sheet report-sheet" style={{ fontSize: '12px' }}>
       <div>
       <div
         style={{
@@ -868,11 +868,10 @@ export const LaddooReportSheet: React.FC<{
 
   return (
     <div
-      className="paper-sheet a4-full"
+      className="paper-sheet laddoo-sheet"
       style={{
         fontSize: '13px',
-        lineHeight: 1.32,
-        minHeight: '1075px',
+        lineHeight: 1.35,
       }}
     >
       <div
@@ -917,7 +916,8 @@ export const LaddooReportSheet: React.FC<{
         )}
       </div>
 
-      <h4 style={{ fontSize: '15px', margin: '12px 0 4px' }}>
+      <div>
+      <h4 style={{ fontSize: '15px', margin: '8px 0 4px' }}>
         ୧) ସାଧାରଣ ବିବରଣୀ-
       </h4>
       <div
@@ -934,8 +934,10 @@ export const LaddooReportSheet: React.FC<{
         {fl('କ୍ଲଷ୍ଟର ର ନାମ-', I.cluster || 'MOHULI')}
         {fl('ଜିଲ୍ଲା ର ନାମ-', I.dist)}
       </div>
+      </div>
 
-      <h4 style={{ fontSize: '15px', margin: '12px 0 4px' }}>
+      <div>
+      <h4 style={{ fontSize: '15px', margin: '8px 0 4px' }}>
         ୨) ଛାତ୍ରଛାତ୍ରୀଙ୍କ ବିବରଣୀ-
       </h4>
       <table className="stu-table">
@@ -1008,8 +1010,9 @@ export const LaddooReportSheet: React.FC<{
           )}
         </tbody>
       </table>
+      </div>
 
-      <table style={{ marginTop: '12px' }}>
+      <table style={{ marginTop: '6px' }}>
         <tbody>
           <tr>
             <td className="l" style={{ border: 0 }}>
@@ -1028,7 +1031,8 @@ export const LaddooReportSheet: React.FC<{
         </tbody>
       </table>
 
-      <h4 style={{ fontSize: '15px', margin: '12px 0 4px' }}>
+      <div>
+      <h4 style={{ fontSize: '15px', margin: '8px 0 4px' }}>
         ୪) ପୋଷଣ ଲଡୁ ପ୍ରସ୍ତୁତ ଓ ବଣ୍ଟନ ବିବରଣୀ -
       </h4>
       <table style={{ tableLayout: 'fixed' }}>
@@ -1051,16 +1055,17 @@ export const LaddooReportSheet: React.FC<{
         <tbody>
           <tr className="tall-amt-row">
             {vals.map((v, i) => (
-              <td key={i} style={{ fontSize: '18px', height: '48px' }}>
+              <td key={i} style={{ fontSize: '18px', height: '68px' }}>
                 {v}
               </td>
             ))}
           </tr>
         </tbody>
       </table>
+      </div>
 
-      <div style={{ width: '58%', marginTop: '16px' }}>
-        <table>
+      <div style={{ width: '62%', marginTop: '14px' }}>
+        <table className="laddoo-exp-tbl">
           <thead>
             <tr>
               <th colSpan={2} style={{ fontSize: '15px' }}>
@@ -1097,8 +1102,7 @@ export const LaddooReportSheet: React.FC<{
 
       <div
         style={{
-          marginTop: 'auto',
-          paddingTop: '56px',
+          marginTop: '42px',
           display: 'flex',
           justifyContent: 'space-between',
           gap: '70px',
@@ -1202,7 +1206,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
           marginTop: '4px',
         }}
       >
-        <table className="f15-left-15" style={{ border: '2px solid #000' }}>
+        <table className="f15-att" style={{ border: '2px solid #000' }}>
           <thead>
             <tr>
               <th colSpan={15} style={{ fontSize: '14px', height: '28px' }}>
@@ -1329,7 +1333,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
             ଚଳିତ ମାସରେ ନିମ୍ନ ଲଡୁ ସାମଗ୍ରୀ କ୍ରୟ କମିଟି ଅନୁମତି କ୍ରମେ କିଣାଯାଇ-
             {dStart}-ଠାରୁ-{dEnd}-ପର୍ଯ୍ୟନ୍ତ ଖର୍ଚ୍ଚ କରାଗଲା ।
           </div>
-          <table style={{ border: '2px solid #000', marginTop: '4px' }}>
+          <table className="f15-items" style={{ border: '2px solid #000', marginTop: '6px' }}>
             <thead>
               <tr style={{ fontSize: '11px' }}>
                 <th style={{ width: '9%' }}>କ୍ର. ନଂ</th>
@@ -1367,8 +1371,8 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
           <div
             style={{
               border: '2px solid #000',
-              marginTop: '54px',
-              padding: '6px',
+              marginTop: '22px',
+              padding: '8px',
             }}
           >
             <div style={{ fontSize: '15px', fontWeight: 700 }}>
@@ -1383,14 +1387,14 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
             >
               ଅକ୍ଷରେ- ({words(total)} )
             </div>
-            <div style={{ fontSize: '11px', marginTop: '4px' }}>
+            <div style={{ fontSize: '11px', marginTop: '6px' }}>
               ଉପରୋକ୍ତ ଲଡୁ ସାମଗ୍ରୀ ନଗଦ/ଧାର ସ୍ତରରେ କିଣାଯାଇ ମଧ୍ୟାହ୍ନ ଭୋଜନ
               କାର୍ଯ୍ୟକ୍ରମରେ ଚଳିତ ମାସ-{monName}-ତାରିଖ-{dStart}-ଠାରୁ-{dEnd}-ମଧ୍ୟରେ
               ଖର୍ଚ୍ଚ କରାଯାଇଥିଲା ।
             </div>
           </div>
 
-          <table style={{ width: '100%', marginTop: '20px', border: '2px solid #000' }}>
+          <table className="f15-sum" style={{ width: '100%', marginTop: '18px', border: '2px solid #000' }}>
             <tbody>
               <tr>
                 <td className="l">୧) ମୋଟ ଉପସ୍ଥାନ:-</td>
@@ -1416,7 +1420,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', fontWeight: 700, margin: 'auto 0 0', paddingTop: '14px' }}>
+      <p style={{ textAlign: 'center', fontWeight: 700, margin: '14px 0 0' }}>
         ଏହା ଦ୍ୱାରା ପ୍ରମାଣ କରୁଛି ଉପର ଲିଖିତ ସମସ୍ତ ତଥ୍ୟ ସତ୍ୟ ଅଟେ ଓ ଆମ ବିଦ୍ୟାଳୟ
         ଭୋଜନ ନିୟମିତ ସୁଚାରୁ ରୂପେ ପରିଚାଳିତ କରାଯାଇଛି ।
       </p>
@@ -1424,7 +1428,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '34px',
+          marginTop: '32px',
           fontSize: '11px',
           fontWeight: 700,
           gap: '10px',
@@ -1497,7 +1501,10 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
   );
 
   return (
-    <div className="paper-sheet mdcf-sheet">
+    <div
+      className="paper-sheet mdcf-p1-sheet"
+      style={{ fontSize: '12px' }}
+    >
       <div>
       <div
         style={{
@@ -1849,7 +1856,7 @@ export const MDCFPage2Sheet: React.FC<SheetProps> = ({
       contentEditable
       suppressContentEditableWarning
       colSpan={colSpan}
-      style={{ backgroundColor: '#fffbe6', height: '22px', ...style }}
+      style={{ backgroundColor: '#fffbe6', height: '24px', ...style }}
       onBlur={(e) => setField(k, e.currentTarget.innerText)}
     >
       {getVal(k, def)}
@@ -1868,8 +1875,11 @@ export const MDCFPage2Sheet: React.FC<SheetProps> = ({
   ];
 
   return (
-    <div className="paper-sheet mdcf-sheet">
-      <table style={{ marginBottom: '4px' }}>
+    <div
+      className="paper-sheet mdcf-p2-sheet"
+      style={{ fontSize: '12px' }}
+    >
+      <table style={{ marginBottom: '8px' }}>
         <thead>
           <tr>
             <th colSpan={4} className="l" style={{ fontSize: '13px' }}>
