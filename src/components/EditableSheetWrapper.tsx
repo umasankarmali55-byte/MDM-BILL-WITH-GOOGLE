@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Printer, RotateCcw, ImagePlus } from 'lucide-react';
 import { MDMState, TabId } from '../types/mdm';
 
@@ -12,6 +12,8 @@ interface EditableSheetWrapperProps {
   children: React.ReactNode;
 }
 
+const EDITABLE_SELECTOR = 'td, th, .fi, .fl b, .ec';
+
 export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
   tabId,
   state,
@@ -22,19 +24,27 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
   children,
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
-  const [resetSeq, setResetSeq] = React.useState(0);
+  const m3Ref = useRef<Record<string, string>>(state.m3 || {});
+  const pendingRef = useRef<Record<string, string>>({});
+  const onUpdateRef = useRef(onUpdateState);
+  const [resetSeq, setResetSeq] = useState(0);
 
-  // Apply contenteditable & saved manual overrides (S.m3) when mounted or month/tab changes
-  useEffect(() => {
+  m3Ref.current = state.m3 || {};
+  onUpdateRef.current = onUpdateState;
+
+  // Apply contenteditable & saved manual overrides only on mount / month / tab / reset
+  // Never run on every keystroke so cursor/caret never jumps back to the front.
+  useLayoutEffect(() => {
     if (!enableCellEdits || !sheetRef.current) return;
     const root = sheetRef.current.querySelector('.paper-sheet');
     if (!root) return;
 
     const pre = `${state.cur}|${tabId}|`;
-    const m3 = state.m3 || {};
-    const cells = root.querySelectorAll('td, th, .fi, .fl b, .ec');
+    const m3 = m3Ref.current;
+    const cells = root.querySelectorAll(EDITABLE_SELECTOR);
+    let idx = 0;
 
-    cells.forEach((el, idx) => {
+    cells.forEach((el) => {
       const htmlEl = el as HTMLElement;
       if (
         htmlEl.querySelector('table, input, select, button') ||
@@ -42,27 +52,95 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
       ) {
         return;
       }
+      // Prevent nested contenteditable elements inside another editable cell
+      const parentEditable = htmlEl.parentElement?.closest(EDITABLE_SELECTOR);
+      if (parentEditable && root.contains(parentEditable)) {
+        return;
+      }
+
       const key = pre + idx;
+      idx++;
       htmlEl.setAttribute('contenteditable', 'true');
+      htmlEl.setAttribute('spellcheck', 'false');
       htmlEl.dataset.e = key;
-      if (m3[key] !== undefined && htmlEl.innerText !== m3[key]) {
-        htmlEl.innerText = m3[key];
+
+      const isFocused =
+        document.activeElement === htmlEl ||
+        htmlEl.contains(document.activeElement);
+      if (!isFocused && m3[key] !== undefined) {
+        const currentText = (htmlEl.textContent ?? '').replace(/\u00A0/g, ' ');
+        if (currentText !== m3[key]) {
+          htmlEl.textContent = m3[key];
+        }
       }
     });
-  }, [enableCellEdits, state.cur, tabId, state.m3, children, resetSeq]);
+  }, [enableCellEdits, state.cur, tabId, resetSeq]);
+
+  // Flush any pending edits if the user switches tabs while a cell is still focused
+  useLayoutEffect(() => {
+    return () => {
+      const pending = pendingRef.current;
+      const keys = Object.keys(pending);
+      if (keys.length === 0) return;
+      pendingRef.current = {};
+      onUpdateRef.current((prev) => ({
+        ...prev,
+        m3: { ...(prev.m3 || {}), ...pending },
+      }));
+    };
+  }, [state.cur, tabId]);
+
+  const readCleanText = (el: HTMLElement) =>
+    (el.textContent ?? '').replace(/\u00A0/g, ' ');
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     const key = target?.dataset?.e;
     if (!key) return;
-    const text = target.innerText;
+    // Buffer in ref without triggering React re-render during typing
+    pendingRef.current[key] = readCleanText(target);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const key = target?.dataset?.e;
+    if (!key) return;
+    const text = readCleanText(target);
+    delete pendingRef.current[key];
+    if (m3Ref.current[key] === text) return;
     onUpdateState((prev) => ({
       ...prev,
       m3: { ...(prev.m3 || {}), [key]: text },
     }));
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      const target = e.target as HTMLElement;
+      if (target?.dataset?.e) {
+        e.preventDefault();
+        target.blur();
+      }
+    }
+  };
+
+  const handlePrint = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    const pending = pendingRef.current;
+    if (Object.keys(pending).length > 0) {
+      pendingRef.current = {};
+      onUpdateState((prev) => ({
+        ...prev,
+        m3: { ...(prev.m3 || {}), ...pending },
+      }));
+    }
+    setTimeout(() => window.print(), 20);
+  };
+
   const resetEdits = () => {
+    pendingRef.current = {};
     const pre = `${state.cur}|${tabId}|`;
     onUpdateState((prev) => {
       const nextM3 = { ...(prev.m3 || {}) };
@@ -100,7 +178,7 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={handlePrint}
             className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap"
           >
             <Printer className="w-3.5 h-3.5" />
@@ -149,17 +227,18 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
 
         {enableCellEdits && (
           <span className="text-xs font-medium text-indigo-600 dark:text-indigo-300">
-            Click any cell on the paper to edit manually (auto-saved for this
-            month).
+            Click any cell on the paper to edit manually (auto-saved on blur).
           </span>
         )}
       </div>
 
       {/* Horizontal scroll wrapper on narrow screens */}
       <div
-        key={resetSeq}
+        key={`${state.cur}-${tabId}-${resetSeq}`}
         ref={sheetRef}
         onInput={handleInput}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         className="overflow-x-auto pb-4"
       >
         {children}

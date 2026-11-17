@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Printer } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { MDMState } from '../types/mdm';
 import { MNAMES } from '../data/defaultState';
 import {
@@ -13,36 +13,21 @@ import {
   r2,
   secN,
 } from '../utils/calculations';
+import { EditableSheetWrapper } from './EditableSheetWrapper';
 
 interface AbstractViewProps {
   state: MDMState;
   secondary?: boolean;
+  onUpdateState?: (updater: (prev: MDMState) => MDMState) => void;
 }
 
-export const AbstractView: React.FC<AbstractViewProps> = ({
-  state,
-  secondary = false,
-}) => {
+export const AbstractSheet: React.FC<{
+  state: MDMState;
+  secondary?: boolean;
+}> = ({ state, secondary = false }) => {
   const { year, month } = parseMonthKey(state.cur);
-  const [copied, setCopied] = useState(false);
-
-  const handleCopyExcel = () => {
-    const tableId = secondary ? 'abs2' : 'abt';
-    const rows = Array.from(
-      document.querySelectorAll(`#${tableId} tr`)
-    ).map((tr) =>
-      Array.from(tr.children)
-        .map((c) => (c as HTMLElement).innerText.trim())
-        .join('\t')
-    );
-    navigator.clipboard
-      ?.writeText(rows.join('\n'))
-      .then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      })
-      .catch(() => {});
-  };
+  const monLabel = `${MNAMES[month].toUpperCase()} ${year}`;
+  const I = state.info;
 
   if (secondary) {
     const R = calcSecondary(state);
@@ -61,276 +46,162 @@ export const AbstractView: React.FC<AbstractViewProps> = ({
     const recv = state.recv[2] || 0;
 
     return (
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 no-print">
-          <div className="bg-violet-50/90 dark:bg-violet-950/45 border border-violet-200 dark:border-violet-800 rounded-lg p-4">
-            <div className="text-xs font-semibold text-violet-700 dark:text-violet-300">
-              Meals served · Secondary (9–10)
-            </div>
-            <div className="text-3xl font-bold font-mono-num text-violet-950 dark:text-violet-100 mt-1">
-              {R.meals}
-            </div>
+      <div className="paper-sheet abs-sheet">
+        <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '5px', marginBottom: '6px' }}>
+          <div className="ec" style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '0.02em' }}>
+            {I.school}
           </div>
-          <div className="bg-sky-50/90 dark:bg-sky-950/45 border border-sky-200 dark:border-sky-800 rounded-lg p-4">
-            <div className="text-xs font-semibold text-sky-700 dark:text-sky-300">
-              Meal days
-            </div>
-            <div className="text-3xl font-bold font-mono-num text-sky-950 dark:text-sky-100 mt-1">
-              {R.days}
-            </div>
+          <div className="ec" style={{ fontSize: '10.5px', fontWeight: 700, marginTop: '1px' }}>
+            Block: {I.block} · District: {I.dist} · UDISE: {I.code}
           </div>
-          <div className="bg-amber-50/90 dark:bg-amber-950/45 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-            <div className="text-xs font-semibold text-amber-700 dark:text-amber-300">
-              Per meal cost (₹)
-            </div>
-            <div className="text-3xl font-bold font-mono-num text-amber-950 dark:text-amber-100 mt-1">
-              {f2(pm2(state))}
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-700 dark:to-teal-800 border border-emerald-600 dark:border-emerald-500 rounded-lg p-4 text-white shadow-sm">
-            <div className="text-xs font-semibold text-emerald-100">
-              Total amount (₹)
-            </div>
-            <div className="text-3xl font-bold font-mono-num text-white mt-1">
-              {f2(T)}
-            </div>
-            <div className="text-xs text-emerald-100/90 mt-0.5">
-              Includes laddoo &amp; auto vegetables
-            </div>
+          <div className="ec" style={{ fontSize: '12.5px', fontWeight: 800, marginTop: '3px' }}>
+            SECONDARY (CLASS 9 &amp; 10) ABSTRACT CONSUMPTION STATEMENT — {monLabel}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-violet-200/80 dark:border-slate-800 rounded-lg p-5 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div>
-              <h2 className="font-display font-bold text-lg text-slate-900 dark:text-white">
-                {state.info.school}
-              </h2>
-              <p className="text-xs text-violet-700 dark:text-violet-300 font-medium">
-                {MNAMES[month]} {year} · Secondary (Class 9 and 10) Abstract
-                Consumption
-              </p>
-            </div>
-            <div className="flex items-center gap-2 no-print">
-              <button
-                type="button"
-                onClick={handleCopyExcel}
-                className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md border border-indigo-300 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
-              >
-                {copied ? (
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" />
-                )}
-                <span>{copied ? 'Copied TSV' : 'Copy for Excel'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm transition-all"
-              >
-                <Printer className="w-3.5 h-3.5" />
-                <span>Print</span>
-              </button>
-            </div>
-          </div>
+        <table style={{ marginBottom: '6px' }}>
+          <tbody>
+            <tr>
+              <td className="l" style={{ width: '25%' }}>
+                Meals Served (9–10): <b>{R.meals}</b>
+              </td>
+              <td className="c" style={{ width: '22%' }}>
+                Meal Days: <b>{R.days}</b>
+              </td>
+              <td className="c" style={{ width: '25%' }}>
+                Per Meal Cost: <b>₹{f2(pm2(state))}</b>
+              </td>
+              <td className="r" style={{ width: '28%' }}>
+                Total Payable: <b>₹{f2(T)}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-          <div className="overflow-x-auto">
-            <table
-              id="abs2"
-              className="w-full border-collapse text-sm min-w-[640px]"
-            >
-              <thead>
-                <tr className="bg-violet-700 dark:bg-violet-900 text-white text-xs font-semibold">
-                  <th className="border border-violet-600 dark:border-violet-800 px-3 py-2.5 text-left">
-                    Item
-                  </th>
-                  <th className="border border-violet-600 dark:border-violet-800 px-3 py-2.5 text-center">
-                    Unit
-                  </th>
-                  <th className="border border-violet-600 dark:border-violet-800 px-3 py-2.5 text-right">
-                    Price / kg (₹)
-                  </th>
-                  <th className="border border-violet-600 dark:border-violet-800 px-3 py-2.5 text-right">
-                    Total Qty
-                  </th>
-                  <th className="border border-violet-600 dark:border-violet-800 px-3 py-2.5 text-right">
-                    Total Amount (₹)
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="font-mono-num">
-                <tr className="bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-300 font-sans font-bold text-xs">
-                  <td
-                    colSpan={5}
-                    className="border border-slate-300 dark:border-slate-700 px-3 py-2"
-                  >
-                    A. Daily meal items
-                  </td>
-                </tr>
-                {[
-                  ['Meals served', 'nos', '', String(R.meals), ''],
-                  ['Rice', 'kg', '', f3(R.rice), 'Free'],
-                  ['Dal', 'kg', f2(N.dal[3]), f3(R.dal), f2(R.dalA)],
-                  ['Soya chunks', 'kg', f2(N.soya[3]), f3(R.soya), f2(R.soyaA)],
-                  ['Oil', 'kg', f2(N.oil[3]), f3(R.oil), f2(R.oilA)],
-                  [
-                    'Vegetables (auto adjust)',
-                    'kg',
-                    '',
-                    f3(R.veg),
-                    f2(R.vegAmt),
-                  ],
-                  ['Egg', 'pieces', f2(N.egg[3]), String(R.eggs), f2(R.eggA)],
-                  ['Laddoo', 'pieces', f2(lCost), String(L), f2(ladAmt)],
-                  ['Fuel', '₹', '', '', f2(R.fuel)],
-                  ['Salt & condiment', '₹', '', '', f2(R.cn)],
-                ].map((r, i) => (
-                  <tr
-                    key={i}
-                    className="hover:bg-slate-50 dark:hover:bg-slate-800/40"
-                  >
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 font-sans font-semibold text-slate-900 dark:text-slate-100">
-                      {r[0]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-center font-sans text-slate-600 dark:text-slate-400">
-                      {r[1]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right">
-                      {r[2]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                      {r[3]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                      {r[4]}
-                    </td>
-                  </tr>
-                ))}
+        <table id="abs2">
+          <colgroup>
+            <col style={{ width: '36%' }} />
+            <col style={{ width: '11%' }} />
+            <col style={{ width: '17%' }} />
+            <col style={{ width: '17%' }} />
+            <col style={{ width: '19%' }} />
+          </colgroup>
+          <thead>
+            <tr>
+              <th className="l">Item Description</th>
+              <th className="c">Unit</th>
+              <th className="r">Price / Unit (₹)</th>
+              <th className="r">Total Qty</th>
+              <th className="r">Total Amount (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="abs-sec">
+              <td colSpan={5}>A. Daily Meal Items (Class 9 &amp; 10)</td>
+            </tr>
+            {[
+              ['Meals served', 'nos', '', String(R.meals), ''],
+              ['Rice', 'kg', '', f3(R.rice), 'Free'],
+              ['Dal', 'kg', f2(N.dal[3]), f3(R.dal), f2(R.dalA)],
+              ['Soya chunks', 'kg', f2(N.soya[3]), f3(R.soya), f2(R.soyaA)],
+              ['Oil', 'kg', f2(N.oil[3]), f3(R.oil), f2(R.oilA)],
+              ['Vegetables (auto adjust)', 'kg', '', f3(R.veg), f2(R.vegAmt)],
+              ['Egg', 'pieces', f2(N.egg[3]), String(R.eggs), f2(R.eggA)],
+              ['Laddoo', 'pieces', f2(lCost), String(L), f2(ladAmt)],
+              ['Fuel', '₹', '', '', f2(R.fuel)],
+              ['Salt & condiment', '₹', '', '', f2(R.cn)],
+            ].map((r, i) => (
+              <tr key={i}>
+                <td className="l">{r[0]}</td>
+                <td className="c">{r[1]}</td>
+                <td className="r">{r[2]}</td>
+                <td className="r">{r[3]}</td>
+                <td className="r">{r[4]}</td>
+              </tr>
+            ))}
 
-                <tr className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold">
-                  <td
-                    colSpan={4}
-                    className="border border-slate-300 dark:border-slate-700 px-3 py-2.5 font-sans"
-                  >
-                    TOTAL AMOUNT
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2.5 text-right">
-                    {f2(T)}
-                  </td>
-                </tr>
-                <tr className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold">
-                  <td
-                    colSpan={4}
-                    className="border border-slate-300 dark:border-slate-700 px-3 py-2.5 font-sans"
-                  >
-                    TOTAL MDM COST (WITHOUT LADDOO)
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2.5 text-right">
-                    {f2(R.total)}
-                  </td>
-                </tr>
+            <tr className="abs-tot">
+              <td colSpan={4} className="l">
+                TOTAL AMOUNT (MDM + LADDOO)
+              </td>
+              <td className="r">{f2(T)}</td>
+            </tr>
+            <tr className="abs-tot">
+              <td colSpan={4} className="l">
+                TOTAL MDM COST (WITHOUT LADDOO)
+              </td>
+              <td className="r">{f2(R.total)}</td>
+            </tr>
 
-                <tr className="bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-sans font-bold text-xs">
-                  <td
-                    colSpan={5}
-                    className="border border-slate-300 dark:border-slate-700 px-3 py-2"
-                  >
-                    B. Millet laddoo ingredients
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 font-sans font-semibold">
-                    Laddoos prepared
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-center font-sans">
-                    pieces
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                    {L}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                    {f2(ladAmt)}
-                  </td>
-                </tr>
-                {ing.map((r, i) => (
-                  <tr key={i}>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 font-sans font-semibold">
-                      {r[0]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-center font-sans">
-                      kg
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right">
-                      {f2(r[3])}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                      {f3(r[1])}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                      {f2(r[2])}
-                    </td>
-                  </tr>
-                ))}
-                <tr>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 font-sans font-semibold">
-                    Preparation cost
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-center font-sans">
-                    ₹
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                    {f2(pc)}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 font-sans font-semibold">
-                    Total laddoo cost (ingredients + preparation)
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-center font-sans">
-                    ₹
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                  <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                    {f2(iT + pc)}
-                  </td>
-                </tr>
+            <tr className="abs-sec">
+              <td colSpan={5}>B. Millet Laddoo Ingredients</td>
+            </tr>
+            <tr>
+              <td className="l">Laddoos prepared</td>
+              <td className="c">pieces</td>
+              <td className="r" />
+              <td className="r">{L}</td>
+              <td className="r">{f2(ladAmt)}</td>
+            </tr>
+            {ing.map((r, i) => (
+              <tr key={i}>
+                <td className="l">{r[0]}</td>
+                <td className="c">kg</td>
+                <td className="r">{f2(r[3])}</td>
+                <td className="r">{f3(r[1])}</td>
+                <td className="r">{f2(r[2])}</td>
+              </tr>
+            ))}
+            <tr>
+              <td className="l">Preparation cost</td>
+              <td className="c">₹</td>
+              <td className="r" />
+              <td className="r" />
+              <td className="r">{f2(pc)}</td>
+            </tr>
+            <tr className="abs-tot">
+              <td colSpan={4} className="l">
+                TOTAL LADDOO COST (INGREDIENTS + PREPARATION)
+              </td>
+              <td className="r">{f2(iT + pc)}</td>
+            </tr>
 
-                <tr className="bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 font-sans font-bold text-xs">
-                  <td
-                    colSpan={5}
-                    className="border border-slate-300 dark:border-slate-700 px-3 py-2"
-                  >
-                    C. Rice stock
-                  </td>
-                </tr>
-                {[
-                  ['Opening stock', f3(open)],
-                  ['Rice received', f3(recv)],
-                  ['Rice consumed', f3(R.rice)],
-                  ['Closing balance', f3(open + recv - R.rice)],
-                ].map((r, i) => (
-                  <tr key={i}>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 font-sans font-semibold">
-                      {r[0]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-center font-sans">
-                      kg
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2 text-right font-bold">
-                      {r[1]}
-                    </td>
-                    <td className="border border-slate-300 dark:border-slate-700 px-3 py-2" />
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+            <tr className="abs-sec">
+              <td colSpan={5}>C. Rice Stock Summary</td>
+            </tr>
+            {[
+              ['Opening stock', f3(open)],
+              ['Rice received', f3(recv)],
+              ['Rice consumed', f3(R.rice)],
+              ['Closing balance', f3(open + recv - R.rice)],
+            ].map((r, i) => (
+              <tr key={i}>
+                <td className="l">{r[0]}</td>
+                <td className="c">kg</td>
+                <td className="r" />
+                <td className="r">{r[1]}</td>
+                <td className="r" />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="ec" style={{ fontSize: '9.5px', marginTop: '5px', fontWeight: 600 }}>
+          Note: Quantities are derived from daily attendance, statutory norms, and weekly menu. Vegetables adjust automatically to match exact per-meal entitlement.
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '28px',
+            fontSize: '10.5px',
+            fontWeight: 800,
+          }}
+        >
+          <span className="ec">SHG / SMC President Signature</span>
+          <span className="ec">MDM In-Charge Signature</span>
+          <span className="ec">Headmaster / Headmistress (Seal &amp; Sign)</span>
         </div>
       </div>
     );
@@ -430,367 +301,358 @@ export const AbstractView: React.FC<AbstractViewProps> = ({
   ];
 
   return (
+    <div className="paper-sheet abs-sheet">
+      <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '5px', marginBottom: '6px' }}>
+        <div className="ec" style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '0.02em' }}>
+          {I.school}
+        </div>
+        <div className="ec" style={{ fontSize: '10.5px', fontWeight: 700, marginTop: '1px' }}>
+          Block: {I.block} · District: {I.dist} · UDISE: {I.code}
+        </div>
+        <div className="ec" style={{ fontSize: '12.5px', fontWeight: 800, marginTop: '3px' }}>
+          PRIMARY &amp; UPPER PRIMARY ABSTRACT CONSUMPTION STATEMENT — {monLabel}
+        </div>
+      </div>
+
+      <table style={{ marginBottom: '6px' }}>
+        <tbody>
+          <tr>
+            <td className="l" style={{ width: '25%' }}>
+              SB + Primary Meals: <b>{g[0].q}</b>
+            </td>
+            <td className="c" style={{ width: '25%' }}>
+              Upper Primary Meals: <b>{g[1].q}</b>
+            </td>
+            <td className="c" style={{ width: '24%' }}>
+              Total Meals: <b>{g[0].q + g[1].q}</b>
+            </td>
+            <td className="r" style={{ width: '26%' }}>
+              Total Payable: <b>₹{f2(T)}</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table id="abt">
+        <colgroup>
+          <col style={{ width: '22%' }} />
+          <col style={{ width: '7%' }} />
+          <col style={{ width: '11%' }} />
+          <col style={{ width: '9.5%' }} />
+          <col style={{ width: '10.5%' }} />
+          <col style={{ width: '9.5%' }} />
+          <col style={{ width: '10.5%' }} />
+          <col style={{ width: '9.5%' }} />
+          <col style={{ width: '10.5%' }} />
+        </colgroup>
+        <thead>
+          <tr>
+            <th className="l">Item</th>
+            <th className="c">Unit</th>
+            <th className="r">Rate (₹)</th>
+            <th className="r">SB+PS Qty</th>
+            <th className="r">SB+PS Amt</th>
+            <th className="r">UPS Qty</th>
+            <th className="r">UPS Amt</th>
+            <th className="r">Total Qty</th>
+            <th className="r">Total Amt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="abs-sec">
+            <td colSpan={9}>A. Daily Meal Items (Sheet 1 and Sheet 2)</td>
+          </tr>
+          <tr>
+            <td className="l">Meals served</td>
+            <td className="c">nos</td>
+            <td className="r" />
+            <td className="r">{g[0].q}</td>
+            <td className="r" />
+            <td className="r">{g[1].q}</td>
+            <td className="r" />
+            <td className="r">{g[0].q + g[1].q}</td>
+            <td className="r" />
+          </tr>
+          <tr>
+            <td className="l">Rice</td>
+            <td className="c">kg</td>
+            <td className="r" />
+            <td className="r">{f3(g[0].rice)}</td>
+            <td className="r">0.00</td>
+            <td className="r">{f3(g[1].rice)}</td>
+            <td className="r">0.00</td>
+            <td className="r">{f3(rc)}</td>
+            <td className="r">Free</td>
+          </tr>
+          {mealRows.map((r) => (
+            <tr key={r.label}>
+              <td className="l">{r.label}</td>
+              <td className="c">{r.unit}</td>
+              <td className="r">{r.pr}</td>
+              <td className="r">{r.q0}</td>
+              <td className="r">{r.a0}</td>
+              <td className="r">{r.q1}</td>
+              <td className="r">{r.a1}</td>
+              <td className="r">{r.tq}</td>
+              <td className="r">{r.ta}</td>
+            </tr>
+          ))}
+          <tr className="abs-tot">
+            <td colSpan={3} className="l">
+              TOTAL AMOUNT (MDM + LADDOO)
+            </td>
+            <td className="r" />
+            <td className="r">{f2(tt[0])}</td>
+            <td className="r" />
+            <td className="r">{f2(tt[1])}</td>
+            <td className="r" />
+            <td className="r">{f2(T)}</td>
+          </tr>
+          <tr className="abs-tot">
+            <td colSpan={3} className="l">
+              TOTAL MDM COST (WITHOUT LADDOO)
+            </td>
+            <td className="r" />
+            <td className="r">{f2(r2(tt[0]) - r2(a[0].lad))}</td>
+            <td className="r" />
+            <td className="r">{f2(r2(tt[1]) - r2(a[1].lad))}</td>
+            <td className="r" />
+            <td className="r">{f2(T - r2(a[0].lad) - r2(a[1].lad))}</td>
+          </tr>
+
+          <tr className="abs-sec">
+            <td colSpan={9}>B. Millet Laddoo Ingredients (Sheet 3)</td>
+          </tr>
+          <tr>
+            <td className="l">Laddoos prepared</td>
+            <td className="c">pieces</td>
+            <td colSpan={5} className="r" />
+            <td className="r">{L}</td>
+            <td className="r">{f2(L * lCost)}</td>
+          </tr>
+          {ing.map((r, i) => (
+            <tr key={i}>
+              <td className="l">{r[0]}</td>
+              <td className="c">kg</td>
+              <td className="r">{f2(r[3])}</td>
+              <td colSpan={4} className="r" />
+              <td className="r">{f3(r[1])}</td>
+              <td className="r">{f2(r[2])}</td>
+            </tr>
+          ))}
+          <tr>
+            <td className="l">Preparation cost</td>
+            <td className="c">₹</td>
+            <td colSpan={6} className="r" />
+            <td className="r">{f2(pc)}</td>
+          </tr>
+          <tr className="abs-tot">
+            <td colSpan={8} className="l">
+              TOTAL LADDOO COST (INGREDIENTS + PREPARATION)
+            </td>
+            <td className="r">{f2(iT + pc)}</td>
+          </tr>
+
+          <tr className="abs-sec">
+            <td colSpan={9}>C. Rice Stock Summary (Sheet 4)</td>
+          </tr>
+          {[
+            ['Opening stock', f3(open)],
+            ['Rice received', f3(recv)],
+            ['Rice consumed', f3(rc)],
+            ['Closing balance', f3(open + recv - rc)],
+          ].map((r, i) => (
+            <tr key={i}>
+              <td className="l">{r[0]}</td>
+              <td className="c">kg</td>
+              <td colSpan={5} className="r" />
+              <td className="r">{r[1]}</td>
+              <td className="r" />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="ec" style={{ fontSize: '9.5px', marginTop: '5px', fontWeight: 600 }}>
+        Note: Quantities come from attendance, norms, and weekly menu. Amount = quantity × price per kg; vegetables take the remaining per-meal entitlement. Total includes laddoo.
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: '26px',
+          fontSize: '10.5px',
+          fontWeight: 800,
+        }}
+      >
+        <span className="ec">SHG / SMC President Signature</span>
+        <span className="ec">MDM In-Charge Signature</span>
+        <span className="ec">Headmaster / Headmistress (Seal &amp; Sign)</span>
+      </div>
+    </div>
+  );
+};
+
+export const AbstractView: React.FC<AbstractViewProps> = ({
+  state,
+  secondary = false,
+  onUpdateState,
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  // When rendered inside ExportPackView (no onUpdateState), output pure A4 sheet directly
+  if (!onUpdateState) {
+    return <AbstractSheet state={state} secondary={secondary} />;
+  }
+
+  const handleCopyExcel = () => {
+    const tableId = secondary ? 'abs2' : 'abt';
+    const rows = Array.from(document.querySelectorAll(`#${tableId} tr`)).map(
+      (tr) =>
+        Array.from(tr.children)
+          .map((c) => (c as HTMLElement).innerText.trim())
+          .join('\t')
+    );
+    navigator.clipboard
+      ?.writeText(rows.join('\n'))
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      })
+      .catch(() => {});
+  };
+
+  const tabId = secondary ? 12 : 7;
+
+  const kpiCards = secondary
+    ? (() => {
+        const R = calcSecondary(state);
+        const lCost = ladCost(state);
+        const T = R.total + R.lad * lCost;
+        return (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 no-print">
+            <div className="bg-violet-50/90 dark:bg-violet-950/45 border border-violet-200 dark:border-violet-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-violet-700 dark:text-violet-300">
+                Meals served · Secondary (9–10)
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-violet-950 dark:text-violet-100 mt-1">
+                {R.meals}
+              </div>
+            </div>
+            <div className="bg-sky-50/90 dark:bg-sky-950/45 border border-sky-200 dark:border-sky-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-sky-700 dark:text-sky-300">
+                Meal days
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-sky-950 dark:text-sky-100 mt-1">
+                {R.days}
+              </div>
+            </div>
+            <div className="bg-amber-50/90 dark:bg-amber-950/45 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                Per meal cost (₹)
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-amber-950 dark:text-amber-100 mt-1">
+                {f2(pm2(state))}
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-700 dark:to-teal-800 border border-emerald-600 dark:border-emerald-500 rounded-lg p-4 text-white shadow-sm">
+              <div className="text-xs font-semibold text-emerald-100">
+                Total amount (₹)
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-white mt-1">
+                {f2(T)}
+              </div>
+              <div className="text-xs text-emerald-100/90 mt-0.5">
+                Includes laddoo &amp; auto vegetables
+              </div>
+            </div>
+          </div>
+        );
+      })()
+    : (() => {
+        const g = calcAbsTiers(state);
+        const N = state.N;
+        const lCost = ladCost(state);
+        const a = [0, 1].map((k) => {
+          const G = g[k];
+          const dal = +G.dal.toFixed(3) * N.dal[2 + k];
+          const soya = +G.soya.toFixed(3) * N.soya[2 + k];
+          const oil = +G.oil.toFixed(3) * N.oil[2 + k];
+          const egg = G.egg * N.egg[2 + k];
+          const lad = G.lad * lCost;
+          const fuel = G.fuel;
+          const cond = G.cond;
+          const veg = G.q * state.pm[k] - (dal + soya + oil + egg + lad + fuel + cond);
+          return dal + soya + oil + veg + egg + lad + fuel + cond;
+        });
+        const T = r2(a[0]) + r2(a[1]);
+        return (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 no-print">
+            <div className="bg-sky-50/90 dark:bg-sky-950/45 border border-sky-200 dark:border-sky-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-sky-700 dark:text-sky-300">
+                Meals served · SB + Primary
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-sky-950 dark:text-sky-100 mt-1">
+                {g[0].q}
+              </div>
+            </div>
+            <div className="bg-teal-50/90 dark:bg-teal-950/45 border border-teal-200 dark:border-teal-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-teal-700 dark:text-teal-300">
+                Meals served · Upper Primary
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-teal-950 dark:text-teal-100 mt-1">
+                {g[1].q}
+              </div>
+            </div>
+            <div className="bg-indigo-50/90 dark:bg-indigo-950/45 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
+              <div className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+                Total Primary meals
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-indigo-950 dark:text-indigo-100 mt-1">
+                {g[0].q + g[1].q}
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-700 dark:to-teal-800 border border-emerald-600 dark:border-emerald-500 rounded-lg p-4 text-white shadow-sm">
+              <div className="text-xs font-semibold text-emerald-100">
+                Total amount (₹)
+              </div>
+              <div className="text-3xl font-bold font-mono-num text-white mt-1">
+                {f2(T)}
+              </div>
+              <div className="text-xs text-emerald-100/90 mt-0.5">
+                All items, vegetables auto-adjusted
+              </div>
+            </div>
+          </div>
+        );
+      })();
+
+  return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 no-print">
-        <div className="bg-sky-50/90 dark:bg-sky-950/45 border border-sky-200 dark:border-sky-800 rounded-lg p-4">
-          <div className="text-xs font-semibold text-sky-700 dark:text-sky-300">
-            Meals served · SB + Primary
-          </div>
-          <div className="text-3xl font-bold font-mono-num text-sky-950 dark:text-sky-100 mt-1">
-            {g[0].q}
-          </div>
-        </div>
-        <div className="bg-teal-50/90 dark:bg-teal-950/45 border border-teal-200 dark:border-teal-800 rounded-lg p-4">
-          <div className="text-xs font-semibold text-teal-700 dark:text-teal-300">
-            Meals served · Upper Primary
-          </div>
-          <div className="text-3xl font-bold font-mono-num text-teal-950 dark:text-teal-100 mt-1">
-            {g[1].q}
-          </div>
-        </div>
-        <div className="bg-indigo-50/90 dark:bg-indigo-950/45 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
-          <div className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">
-            Total Primary meals
-          </div>
-          <div className="text-3xl font-bold font-mono-num text-indigo-950 dark:text-indigo-100 mt-1">
-            {g[0].q + g[1].q}
-          </div>
-        </div>
-        <div className="bg-gradient-to-br from-emerald-600 to-teal-600 dark:from-emerald-700 dark:to-teal-800 border border-emerald-600 dark:border-emerald-500 rounded-lg p-4 text-white shadow-sm">
-          <div className="text-xs font-semibold text-emerald-100">
-            Total amount (₹)
-          </div>
-          <div className="text-3xl font-bold font-mono-num text-white mt-1">
-            {f2(T)}
-          </div>
-          <div className="text-xs text-emerald-100/90 mt-0.5">
-            All items, vegetables auto-adjusted
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-slate-900 border border-indigo-200/80 dark:border-slate-800 rounded-lg p-5 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <h2 className="font-display font-bold text-lg text-slate-900 dark:text-white">
-              {state.info.school}
-            </h2>
-            <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
-              {MNAMES[month]} {year} · Abstract Consumption · Item-wise Monthly
-            </p>
-          </div>
-          <div className="flex items-center gap-2 no-print">
-            <button
-              type="button"
-              onClick={handleCopyExcel}
-              className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md border border-indigo-300 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
-            >
-              {copied ? (
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-              ) : (
-                <Copy className="w-3.5 h-3.5" />
-              )}
-              <span>{copied ? 'Copied TSV' : 'Copy for Excel'}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm transition-all"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table
-            id="abt"
-            className="w-full border-collapse text-sm min-w-[780px]"
+      {kpiCards}
+      <EditableSheetWrapper
+        tabId={tabId}
+        state={state}
+        onUpdateState={onUpdateState}
+        enableCellEdits
+        extraToolbar={
+          <button
+            type="button"
+            onClick={handleCopyExcel}
+            className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md border border-indigo-300 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
           >
-            <thead>
-              <tr className="text-white text-xs font-semibold">
-                <th className="border border-indigo-600 dark:border-indigo-800 bg-indigo-700 dark:bg-indigo-900 px-2.5 py-2.5 text-left">
-                  Item
-                </th>
-                <th className="border border-indigo-600 dark:border-indigo-800 bg-indigo-700 dark:bg-indigo-900 px-2 py-2.5 text-center">
-                  Unit
-                </th>
-                <th className="border border-indigo-600 dark:border-indigo-800 bg-indigo-700 dark:bg-indigo-900 px-2 py-2.5 text-right">
-                  Price / kg (₹)
-                </th>
-                <th className="border border-sky-600 dark:border-sky-800 bg-sky-700 dark:bg-sky-900 px-2 py-2.5 text-right">
-                  SB+PS Qty
-                </th>
-                <th className="border border-sky-600 dark:border-sky-800 bg-sky-700 dark:bg-sky-900 px-2 py-2.5 text-right">
-                  SB+PS Amt (₹)
-                </th>
-                <th className="border border-teal-600 dark:border-teal-800 bg-teal-700 dark:bg-teal-900 px-2 py-2.5 text-right">
-                  UPS Qty
-                </th>
-                <th className="border border-teal-600 dark:border-teal-800 bg-teal-700 dark:bg-teal-900 px-2 py-2.5 text-right">
-                  UPS Amt (₹)
-                </th>
-                <th className="border border-emerald-600 dark:border-emerald-800 bg-emerald-700 dark:bg-emerald-900 px-2 py-2.5 text-right">
-                  Total Qty
-                </th>
-                <th className="border border-emerald-600 dark:border-emerald-800 bg-emerald-700 dark:bg-emerald-900 px-2 py-2.5 text-right">
-                  Total Amt (₹)
-                </th>
-              </tr>
-            </thead>
-            <tbody className="font-mono-num">
-              <tr className="bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-300 font-sans font-bold text-xs">
-                <td
-                  colSpan={9}
-                  className="border border-slate-300 dark:border-slate-700 px-3 py-2"
-                >
-                  A. Daily meal items (Sheet 1 and Sheet 2)
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                  Meals served
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                  nos
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                  {g[0].q}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                  {g[1].q}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                  {g[0].q + g[1].q}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2" />
-              </tr>
-              <tr>
-                <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                  Rice
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                  kg
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                  {f3(g[0].rice)}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                  0.00
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                  {f3(g[1].rice)}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                  0.00
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                  {f3(rc)}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-sans font-bold">
-                  Free
-                </td>
-              </tr>
-              {mealRows.map((r) => (
-                <tr
-                  key={r.label}
-                  className="hover:bg-slate-50 dark:hover:bg-slate-800/40"
-                >
-                  <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                    {r.label}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans text-slate-600 dark:text-slate-400">
-                    {r.unit}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                    {r.pr}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                    {r.q0}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                    {r.a0}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                    {r.q1}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                    {r.a1}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                    {r.tq}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                    {r.ta}
-                  </td>
-                </tr>
-              ))}
-              <tr className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold">
-                <td
-                  colSpan={3}
-                  className="border border-slate-300 dark:border-slate-700 px-2.5 py-2.5 font-sans"
-                >
-                  TOTAL AMOUNT
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5 text-right">
-                  {f2(tt[0])}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5 text-right">
-                  {f2(tt[1])}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5 text-right">
-                  {f2(T)}
-                </td>
-              </tr>
-              <tr className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold">
-                <td
-                  colSpan={3}
-                  className="border border-slate-300 dark:border-slate-700 px-2.5 py-2.5 font-sans"
-                >
-                  TOTAL MDM COST (WITHOUT LADDOO)
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5 text-right">
-                  {f2(r2(tt[0]) - r2(a[0].lad))}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5 text-right">
-                  {f2(r2(tt[1]) - r2(a[1].lad))}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5" />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2.5 text-right">
-                  {f2(T - r2(a[0].lad) - r2(a[1].lad))}
-                </td>
-              </tr>
-
-              <tr className="bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-sans font-bold text-xs">
-                <td
-                  colSpan={9}
-                  className="border border-slate-300 dark:border-slate-700 px-3 py-2"
-                >
-                  B. Millet laddoo ingredients (Sheet 3)
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                  Laddoos prepared
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                  pieces
-                </td>
-                <td
-                  colSpan={5}
-                  className="border border-slate-300 dark:border-slate-700 px-2 py-2"
-                />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                  {L}
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                  {f2(L * lCost)}
-                </td>
-              </tr>
-              {ing.map((r, i) => (
-                <tr key={i}>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                    {r[0]}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                    kg
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right">
-                    {f2(r[3])}
-                  </td>
-                  <td
-                    colSpan={4}
-                    className="border border-slate-300 dark:border-slate-700 px-2 py-2"
-                  />
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                    {f3(r[1])}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                    {f2(r[2])}
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                  Preparation cost
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                  ₹
-                </td>
-                <td
-                  colSpan={6}
-                  className="border border-slate-300 dark:border-slate-700 px-2 py-2"
-                />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                  {f2(pc)}
-                </td>
-              </tr>
-              <tr>
-                <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                  Total laddoo cost (ingredients + preparation)
-                </td>
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                  ₹
-                </td>
-                <td
-                  colSpan={6}
-                  className="border border-slate-300 dark:border-slate-700 px-2 py-2"
-                />
-                <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                  {f2(iT + pc)}
-                </td>
-              </tr>
-
-              <tr className="bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 font-sans font-bold text-xs">
-                <td
-                  colSpan={9}
-                  className="border border-slate-300 dark:border-slate-700 px-3 py-2"
-                >
-                  C. Rice stock (Sheet 4)
-                </td>
-              </tr>
-              {[
-                ['Opening stock', f3(open)],
-                ['Rice received', f3(recv)],
-                ['Rice consumed', f3(rc)],
-                ['Closing balance', f3(open + recv - rc)],
-              ].map((r, i) => (
-                <tr key={i}>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2.5 py-2 font-sans font-semibold">
-                    {r[0]}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-center font-sans">
-                    kg
-                  </td>
-                  <td
-                    colSpan={5}
-                    className="border border-slate-300 dark:border-slate-700 px-2 py-2"
-                  />
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2 text-right font-bold">
-                    {r[1]}
-                  </td>
-                  <td className="border border-slate-300 dark:border-slate-700 px-2 py-2" />
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-          Quantities come from attendance, norms, and weekly menu. Amount =
-          quantity × price per kg; vegetables take whatever is left of the per
-          meal cost. The total includes laddoo, unlike the Form-15 bill.
-        </p>
-      </div>
+            {copied ? (
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+            <span>{copied ? 'Copied TSV' : 'Copy for Excel'}</span>
+          </button>
+        }
+      >
+        <AbstractSheet state={state} secondary={secondary} />
+      </EditableSheetWrapper>
     </div>
   );
 };

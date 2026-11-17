@@ -174,6 +174,64 @@
   text-align: center;
 }
 
+/* A4 Portrait Abstract Printable Sheet */
+.paper-sheet.abs-sheet {
+  font-size: 10.5px;
+  line-height: 1.25;
+  padding: 12px 14px;
+}
+
+.paper-sheet.abs-sheet table {
+  border: 1.8px solid #000000;
+  table-layout: fixed;
+}
+
+.paper-sheet.abs-sheet th,
+.paper-sheet.abs-sheet td {
+  border: 1px solid #000000;
+  padding: 2.5px 5px;
+  font-size: 10.5px;
+  line-height: 1.22;
+}
+
+.paper-sheet.abs-sheet thead th {
+  background-color: #f1f5f9;
+  font-weight: 800;
+  font-size: 10px;
+  padding: 4px 4px;
+}
+
+.paper-sheet.abs-sheet td.l,
+.paper-sheet.abs-sheet th.l {
+  text-align: left;
+}
+
+.paper-sheet.abs-sheet td.r,
+.paper-sheet.abs-sheet th.r {
+  text-align: right;
+  color: #000000;
+  font-variant-numeric: tabular-nums;
+}
+
+.paper-sheet.abs-sheet td.c,
+.paper-sheet.abs-sheet th.c {
+  text-align: center;
+}
+
+.paper-sheet.abs-sheet tr.abs-sec td {
+  background-color: #e2e8f0;
+  text-align: left;
+  font-weight: 800;
+  font-size: 10.5px;
+  padding: 3px 6px;
+}
+
+.paper-sheet.abs-sheet tr.abs-tot td {
+  background-color: #ecfdf5;
+  font-weight: 800;
+  font-size: 10.5px;
+}
+
 /* Print Layout Engine */
 @media print {
   @page {

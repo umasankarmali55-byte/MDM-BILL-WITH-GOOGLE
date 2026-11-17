@@ -201,9 +201,11 @@ export default function App() {
       case 4:
         return <SchoolDetailsView state={state} onUpdateState={updateState} />;
       case 7:
-        return <AbstractView state={state} />;
+        return <AbstractView state={state} onUpdateState={updateState} />;
       case 12:
-        return <AbstractView state={state} secondary />;
+        return (
+          <AbstractView state={state} secondary onUpdateState={updateState} />
+        );
 
       case 2:
         return (
