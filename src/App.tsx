@@ -378,7 +378,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-sky-50/70 via-slate-50 to-indigo-50/70 dark:from-[#070B14] dark:via-[#0B1221] dark:to-[#0E172A] text-slate-900 dark:text-slate-100">
+    <div className="print-shell min-h-screen flex bg-gradient-to-br from-sky-50/70 via-slate-50 to-indigo-50/70 dark:from-[#070B14] dark:via-[#0B1221] dark:to-[#0E172A] text-slate-900 dark:text-slate-100">
       <Sidebar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
@@ -388,7 +388,7 @@ export default function App() {
         onCloseMobile={() => setMobileMenuOpen(false)}
       />
 
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="print-shell flex-1 min-w-0 flex flex-col">
         {/* Top Bar Contract: Breadcrumb on Left, Actions on Right */}
         <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 no-print">
           <div className="h-1 w-full bg-gradient-to-r from-sky-500 via-indigo-500 via-purple-500 to-emerald-500" />
@@ -536,7 +536,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-6 max-w-[1600px] w-full mx-auto">
+        <main className="print-main flex-1 p-4 lg:p-6 max-w-[1600px] w-full mx-auto">
           {renderContent()}
         </main>
       </div>

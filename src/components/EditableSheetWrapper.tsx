@@ -239,7 +239,7 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
         onInput={handleInput}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        className="overflow-x-auto pb-4"
+        className="print-scroll overflow-x-auto pb-4"
       >
         {children}
       </div>
