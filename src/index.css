@@ -176,9 +176,12 @@
 
 /* A4 Portrait Abstract Printable Sheet */
 .paper-sheet.abs-sheet {
-  font-size: 10.5px;
-  line-height: 1.25;
-  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  min-height: 1075px;
+  font-size: 11.5px;
+  line-height: 1.3;
+  padding: 14px 16px;
 }
 
 .paper-sheet.abs-sheet table {
@@ -189,16 +192,16 @@
 .paper-sheet.abs-sheet th,
 .paper-sheet.abs-sheet td {
   border: 1px solid #000000;
-  padding: 2.5px 5px;
-  font-size: 10.5px;
-  line-height: 1.22;
+  padding: 4px 6px;
+  font-size: 11.5px;
+  line-height: 1.28;
 }
 
 .paper-sheet.abs-sheet thead th {
   background-color: #f1f5f9;
   font-weight: 800;
-  font-size: 10px;
-  padding: 4px 4px;
+  font-size: 11px;
+  padding: 5px 5px;
 }
 
 .paper-sheet.abs-sheet td.l,
@@ -222,68 +225,121 @@
   background-color: #e2e8f0;
   text-align: left;
   font-weight: 800;
-  font-size: 10.5px;
-  padding: 3px 6px;
+  font-size: 11.5px;
+  padding: 4.5px 6px;
 }
 
 .paper-sheet.abs-sheet tr.abs-tot td {
   background-color: #ecfdf5;
   font-weight: 800;
-  font-size: 10.5px;
+  font-size: 11.5px;
 }
 
-/* Pre-print A4 measurement & direct PDF capture rules */
+/* Full A4 Cover Page Sheet Helpers */
+.paper-sheet.a4-full {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 1075px;
+}
+
+.paper-sheet.f15-sheet {
+  display: flex;
+  flex-direction: column;
+  min-height: 1075px;
+}
+
+.paper-sheet.f15-sheet th,
+.paper-sheet.f15-sheet td {
+  padding: 2.5px 3px;
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+
+.paper-sheet.f15-sheet table.f15-left-14 th,
+.paper-sheet.f15-sheet table.f15-left-14 td {
+  padding: 2px 2px;
+  font-size: 10px;
+  line-height: 1.18;
+}
+
+.paper-sheet.f15-sheet table.f15-left-15 th,
+.paper-sheet.f15-sheet table.f15-left-15 td {
+  padding: 2px 1.5px;
+  font-size: 9.5px;
+  line-height: 1.16;
+}
+
+.paper-sheet.mdcf-sheet {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 1075px;
+  width: 794px;
+  font-size: 12px;
+}
+
+.paper-sheet.mdcf-sheet th,
+.paper-sheet.mdcf-sheet td {
+  padding: 3.5px 5px;
+  font-size: 11.5px;
+  line-height: 1.24;
+}
+
+/* Monthly PM POSHAN & Secondary Reports — crisp full-page balance without overflow */
+.paper-sheet.monthly-report {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 1065px;
+  font-size: 11px;
+  line-height: 1.24;
+  padding: 10px 12px;
+}
+
+.paper-sheet.monthly-report th,
+.paper-sheet.monthly-report td {
+  padding: 2.5px 3.5px;
+  font-size: 10.5px;
+  line-height: 1.18;
+}
+
+.paper-sheet.monthly-report table.stu-table th,
+.paper-sheet.monthly-report table.stu-table td {
+  padding: 2px 1px;
+  font-size: 10px;
+  line-height: 1.16;
+}
+
+.paper-sheet.monthly-report table.stu-table thead tr:nth-child(3) th {
+  font-size: 8.5px;
+}
+
+.paper-sheet.monthly-report .tall-amt-row {
+  height: 42px !important;
+}
+
+.paper-sheet.monthly-report h4 {
+  margin: 4px 0 2px !important;
+  font-size: 13px !important;
+}
+
+.paper-sheet.monthly-report img {
+  max-height: 62px !important;
+  width: auto !important;
+}
+
+.paper-sheet.voucher-3up,
+.paper-sheet.voucher-1up {
+  min-height: 1075px;
+}
+
+/* Pre-print A4 measurement & direct PDF capture (non-destructive: hides UI chrome only) */
 html.a4-measure .paper-sheet {
   box-shadow: none !important;
   border: none !important;
   border-radius: 0 !important;
-  padding: 0 !important;
   margin: 0 !important;
-  min-height: 0 !important;
-  font-size: 10px !important;
-  line-height: 1.18 !important;
-}
-
-html.a4-measure .paper-sheet th,
-html.a4-measure .paper-sheet td {
-  padding: 1.5px 3px !important;
-  font-size: 9.5px !important;
-  line-height: 1.14 !important;
-}
-
-html.a4-measure .paper-sheet .tall-amt-row {
-  height: 24px !important;
-}
-
-html.a4-measure .paper-sheet table.stu-table th,
-html.a4-measure .paper-sheet table.stu-table td {
-  padding: 1.5px 1px !important;
-  font-size: 9px !important;
-  line-height: 1.14 !important;
-}
-
-html.a4-measure .paper-sheet table.stu-table thead tr:nth-child(3) th {
-  font-size: 8px !important;
-}
-
-html.a4-measure .paper-sheet h3 {
-  font-size: 14px !important;
-  margin: 2px 0 !important;
-}
-
-html.a4-measure .paper-sheet h4 {
-  font-size: 10.5px !important;
-  margin: 3px 0 1px !important;
-}
-
-html.a4-measure .paper-sheet p {
-  margin: 3px 0 !important;
-  line-height: 1.18 !important;
-}
-
-html.a4-measure .paper-sheet img {
-  max-height: 46px !important;
-  width: auto !important;
 }
 
 html.a4-measure .paper-sheet .fi:empty::before {
@@ -293,33 +349,6 @@ html.a4-measure .paper-sheet .fi:empty::before {
 html.a4-measure .paper-sheet [contenteditable="true"] {
   background-color: transparent !important;
   outline: none !important;
-}
-
-html.a4-measure .paper-sheet.voucher-3up {
-  font-size: 10px !important;
-  line-height: 1.35 !important;
-  gap: 5px !important;
-}
-
-html.a4-measure .paper-sheet.voucher-3up h3 {
-  font-size: 12px !important;
-  margin: 0 0 2px !important;
-}
-
-html.a4-measure .paper-sheet.voucher-3up .v-intro {
-  font-size: 10px !important;
-  line-height: 1.4 !important;
-}
-
-html.a4-measure .paper-sheet.voucher-1up {
-  font-size: 11.5px !important;
-  line-height: 1.55 !important;
-  gap: 8px !important;
-}
-
-html.a4-measure .paper-sheet.voucher-1up .v-body {
-  font-size: 13.5px !important;
-  line-height: 1.75 !important;
 }
 
 /* Print Layout Engine — A4 Portrait with Narrow Margins */
@@ -363,81 +392,9 @@ html.a4-measure .paper-sheet.voucher-1up .v-body {
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;
-    padding: 0 !important;
+    padding: 2px 4px !important;
     margin: 0 auto !important;
     max-width: none !important;
-    min-height: 0 !important;
-    font-size: 10px !important;
-    line-height: 1.18 !important;
-  }
-
-  .paper-sheet th,
-  .paper-sheet td {
-    padding: 1.5px 3px !important;
-    font-size: 9.5px !important;
-    line-height: 1.14 !important;
-  }
-
-  .paper-sheet .tall-amt-row {
-    height: 24px !important;
-  }
-
-  .paper-sheet table.stu-table th,
-  .paper-sheet table.stu-table td {
-    padding: 1.5px 1px !important;
-    font-size: 9px !important;
-    line-height: 1.14 !important;
-  }
-
-  .paper-sheet table.stu-table thead tr:nth-child(3) th {
-    font-size: 8px !important;
-  }
-
-  .paper-sheet h3 {
-    font-size: 14px !important;
-    margin: 2px 0 !important;
-  }
-
-  .paper-sheet h4 {
-    font-size: 10.5px !important;
-    margin: 3px 0 1px !important;
-  }
-
-  .paper-sheet p {
-    margin: 3px 0 !important;
-    line-height: 1.18 !important;
-  }
-
-  .paper-sheet img {
-    max-height: 46px !important;
-    width: auto !important;
-  }
-
-  .paper-sheet.voucher-3up {
-    font-size: 10px !important;
-    line-height: 1.35 !important;
-    gap: 5px !important;
-  }
-
-  .paper-sheet.voucher-3up h3 {
-    font-size: 12px !important;
-    margin: 0 0 2px !important;
-  }
-
-  .paper-sheet.voucher-3up .v-intro {
-    font-size: 10px !important;
-    line-height: 1.4 !important;
-  }
-
-  .paper-sheet.voucher-1up {
-    font-size: 11.5px !important;
-    line-height: 1.55 !important;
-    gap: 8px !important;
-  }
-
-  .paper-sheet.voucher-1up .v-body {
-    font-size: 13.5px !important;
-    line-height: 1.75 !important;
   }
 
   .paper-sheet tr {
@@ -451,6 +408,7 @@ html.a4-measure .paper-sheet.voucher-1up .v-body {
 
   .paper-sheet [contenteditable="true"] {
     background-color: transparent !important;
+    outline: none !important;
   }
 
   .exp-page {
@@ -466,3 +424,4 @@ html.a4-measure .paper-sheet.voucher-1up .v-body {
     break-after: auto;
   }
 }
+

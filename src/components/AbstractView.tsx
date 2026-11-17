@@ -194,8 +194,9 @@ export const AbstractSheet: React.FC<{
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            marginTop: '28px',
-            fontSize: '10.5px',
+            marginTop: 'auto',
+            paddingTop: '24px',
+            fontSize: '11px',
             fontWeight: 800,
           }}
         >
@@ -481,8 +482,9 @@ export const AbstractSheet: React.FC<{
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '26px',
-          fontSize: '10.5px',
+          marginTop: 'auto',
+          paddingTop: '24px',
+          fontSize: '11px',
           fontWeight: 800,
         }}
       >

@@ -80,7 +80,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
   ];
 
   return (
-    <div className="paper-sheet">
+    <div className="paper-sheet f15-sheet">
       <div style={{ textAlign: 'center', fontWeight: 700, fontSize: '15px' }}>
         ଫର୍ମ ନଂ -୧୫ (ପ୍ରାଥମିକ)
       </div>
@@ -93,7 +93,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
           marginTop: '4px',
         }}
       >
-        <table style={{ border: '2px solid #000' }}>
+        <table className="f15-left-14" style={{ border: '2px solid #000' }}>
           <thead>
             <tr>
               <th colSpan={14} style={{ fontSize: '15px', height: '30px' }}>
@@ -332,7 +332,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', fontWeight: 700, margin: '24px 0 0' }}>
+      <p style={{ textAlign: 'center', fontWeight: 700, margin: 'auto 0 0', paddingTop: '14px' }}>
         ଏହା ଦ୍ୱାରା ପ୍ରମାଣ କରୁଛି ଉପର ଲିଖିତ ସମସ୍ତ ତଥ୍ୟ ସତ୍ୟ ଅଟେ ଓ ଆମ ବିଦ୍ୟାଳୟ
         ଭୋଜନ ନିୟମିତ ସୁଚାରୁ ରୂପେ ପରିଚାଳିତ କରାଯାଇଛି ।
       </p>
@@ -340,7 +340,7 @@ export const Form15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '48px',
+          marginTop: '34px',
           fontSize: '11px',
           fontWeight: 700,
           gap: '10px',
@@ -413,7 +413,8 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
   );
 
   return (
-    <div className="paper-sheet" style={{ fontSize: '12px' }}>
+    <div className="paper-sheet monthly-report">
+      <div>
       <div
         style={{
           display: 'flex',
@@ -486,7 +487,9 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           )}
         </div>
       </div>
+      </div>
 
+      <div>
       <h4 style={{ margin: '10px 0 3px', fontSize: '14px' }}>
         ୨) ଛାତ୍ରଛାତ୍ରୀଙ୍କ ବିବରଣୀ
       </h4>
@@ -540,8 +543,10 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           })}
         </tbody>
       </table>
+      </div>
 
-      <table style={{ marginTop: '8px' }}>
+      <div>
+      <table style={{ marginTop: '4px' }}>
         <tbody>
           <tr>
             <td className="l">୩) ମାସିକ କାର୍ଯ୍ୟ ଦିବସ:-</td>
@@ -555,7 +560,9 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           </tr>
         </tbody>
       </table>
+      </div>
 
+      <div>
       <h4 style={{ margin: '10px 0 3px', fontSize: '14px' }}>
         ୪) ଖାଦ୍ୟ ଶସ୍ୟ ଓ ଅନ୍ୟାନ୍ୟ ବିବରଣୀ
       </h4>
@@ -652,14 +659,18 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           </tr>
         </tbody>
       </table>
+      </div>
 
-      <h4 style={{ margin: '10px 0 3px', fontSize: '14px' }}>
+      <div>
+      <h4 style={{ margin: '6px 0 2px', fontSize: '13px' }}>
         ୫) ଆବଶ୍ୟକ ଚାଉଳ:-{' '}
         <span style={{ borderBottom: '1px solid #000', padding: '0 6px' }}>
           {bal < 0 ? `${f3(-bal)} kg` : 'NIL'}
         </span>
       </h4>
+      </div>
 
+      <div>
       <h4 style={{ margin: '10px 0 3px', fontSize: '14px' }}>
         ୬) ଚଳିତ ମାସରେ ହିତାଧିକାରୀଙ୍କୁ ଦିଆଯାଇଥିବା ଅଣ୍ଡାର ବିବରଣୀ:-
       </h4>
@@ -695,10 +706,12 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           })}
         </tbody>
       </table>
-      <p style={{ textAlign: 'center', margin: '4px 0', fontWeight: 700 }}>
+      <p style={{ textAlign: 'center', margin: '3px 0 0', fontWeight: 700 }}>
         PS AND UPS TOTAL EGG:- {R.eggs}
       </p>
+      </div>
 
+      <div>
       <h4 style={{ margin: '8px 0 3px', fontSize: '14px' }}>
         ୭) ପଦାଧିକାରୀଙ୍କ ଦ୍ୱାରା ପରିଦର୍ଶନ:-
       </h4>
@@ -724,7 +737,9 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           ))}
         </tbody>
       </table>
+      </div>
 
+      <div>
       <h4 style={{ margin: '8px 0 3px', fontSize: '14px' }}>
         ୮) ରୋଷେୟା/ ପାଚିକାଙ୍କ ବିବରଣୀ:-
       </h4>
@@ -748,6 +763,7 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
@@ -852,13 +868,11 @@ export const LaddooReportSheet: React.FC<{
 
   return (
     <div
-      className="paper-sheet"
+      className="paper-sheet a4-full"
       style={{
         fontSize: '13px',
-        lineHeight: 1.35,
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '1040px',
+        lineHeight: 1.32,
+        minHeight: '1075px',
       }}
     >
       <div
@@ -1037,7 +1051,7 @@ export const LaddooReportSheet: React.FC<{
         <tbody>
           <tr className="tall-amt-row">
             {vals.map((v, i) => (
-              <td key={i} style={{ fontSize: '18px', height: '68px' }}>
+              <td key={i} style={{ fontSize: '18px', height: '48px' }}>
                 {v}
               </td>
             ))}
@@ -1175,7 +1189,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
   const total = r2(L * ladCost(state));
 
   return (
-    <div className="paper-sheet">
+    <div className="paper-sheet f15-sheet">
       <div style={{ textAlign: 'center', fontWeight: 700, fontSize: '15px' }}>
         ଫର୍ମ ନଂ -୧୫ (ପ୍ରାଥମିକ)
       </div>
@@ -1188,7 +1202,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
           marginTop: '4px',
         }}
       >
-        <table style={{ border: '2px solid #000' }}>
+        <table className="f15-left-15" style={{ border: '2px solid #000' }}>
           <thead>
             <tr>
               <th colSpan={15} style={{ fontSize: '14px', height: '28px' }}>
@@ -1402,7 +1416,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         </div>
       </div>
 
-      <p style={{ textAlign: 'center', fontWeight: 700, margin: '24px 0 0' }}>
+      <p style={{ textAlign: 'center', fontWeight: 700, margin: 'auto 0 0', paddingTop: '14px' }}>
         ଏହା ଦ୍ୱାରା ପ୍ରମାଣ କରୁଛି ଉପର ଲିଖିତ ସମସ୍ତ ତଥ୍ୟ ସତ୍ୟ ଅଟେ ଓ ଆମ ବିଦ୍ୟାଳୟ
         ଭୋଜନ ନିୟମିତ ସୁଚାରୁ ରୂପେ ପରିଚାଳିତ କରାଯାଇଛି ।
       </p>
@@ -1410,7 +1424,7 @@ export const LaddooForm15PrimarySheet: React.FC<SheetProps> = ({ state }) => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '48px',
+          marginTop: '34px',
           fontSize: '11px',
           fontWeight: 700,
           gap: '10px',
@@ -1483,10 +1497,8 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
   );
 
   return (
-    <div
-      className="paper-sheet"
-      style={{ maxWidth: '780px', fontSize: '12px' }}
-    >
+    <div className="paper-sheet mdcf-sheet">
+      <div>
       <div
         style={{
           display: 'flex',
@@ -1587,14 +1599,16 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
         </b>
       </div>
 
-      <p style={{ margin: '10px 0 8px', fontWeight: 800, fontSize: '12px' }}>
+      <p style={{ margin: '8px 0 4px', fontWeight: 800, fontSize: '12px' }}>
         Instruction keeps following register at the time of filling the form
         <br />
         1)Enrollment Register, 2)Account, 3)Bank Account Pass Book, 4)Cooking
         Cost Details, etc.
       </p>
+      </div>
 
-      <table style={{ marginBottom: '8px' }}>
+      <div>
+      <table style={{ marginBottom: '4px' }}>
         <thead>
           <tr>
             <th colSpan={5}>Meal Available Status-</th>
@@ -1631,12 +1645,13 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
           </tr>
         </tbody>
       </table>
-      <p style={{ margin: '-4px 0 8px', fontWeight: 700 }}>
+      <p style={{ margin: '0', fontWeight: 700 }}>
         *Total meals served during the month:- Total students (-minus) total
         children not availed Mid Day Meal during the month.
       </p>
+      </div>
 
-      <table style={{ marginBottom: '8px' }}>
+      <table style={{ marginBottom: '4px' }}>
         <thead>
           <tr>
             <th colSpan={15} style={{ fontSize: '14px' }}>
@@ -1690,18 +1705,19 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
         </tbody>
       </table>
 
+      <div>
       <div
         style={{
           fontWeight: 700,
           fontSize: '12px',
           textAlign: 'center',
-          margin: '6px 0 4px',
+          margin: '4px 0 4px',
         }}
       >
         MDM Fund details (in Rs) MDM A/C No. (PS+UPS)-{I.acc} &nbsp;|&nbsp;
         Secondary (IX-X)-{I.acc2 || '-'}
       </div>
-      <table style={{ marginBottom: '8px' }}>
+      <table>
         <thead>
           <tr>
             <th style={{ width: '30%' }}>Component</th>
@@ -1742,13 +1758,15 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
           </tr>
         </tbody>
       </table>
+      </div>
 
+      <div>
       <div
         style={{
           fontWeight: 700,
           fontSize: '13px',
           textAlign: 'center',
-          margin: '6px 0 4px',
+          margin: '4px 0 4px',
         }}
       >
         Details Foodgrain ( In Kilogram)
@@ -1794,6 +1812,7 @@ export const MDCFPage1Sheet: React.FC<SheetProps> = ({ state }) => {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
@@ -1849,11 +1868,8 @@ export const MDCFPage2Sheet: React.FC<SheetProps> = ({
   ];
 
   return (
-    <div
-      className="paper-sheet"
-      style={{ maxWidth: '760px', fontSize: '12px' }}
-    >
-      <table style={{ marginBottom: '8px' }}>
+    <div className="paper-sheet mdcf-sheet">
+      <table style={{ marginBottom: '4px' }}>
         <thead>
           <tr>
             <th colSpan={4} className="l" style={{ fontSize: '13px' }}>
