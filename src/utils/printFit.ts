@@ -1,11 +1,16 @@
 /**
  * Ensures every .paper-sheet fits cleanly inside 1 A4 Portrait page
- * with narrow margins (4mm top/bottom, 5mm left/right -> ~200mm x 289mm).
+ * with narrow margins (5mm all sides -> ~200mm x 287mm printable area).
+ * Uses conservative thresholds (960px height) to account for Chromium print font metrics.
  */
-const A4_MAX_WIDTH_PX = 755;
-const A4_MAX_HEIGHT_PX = 1055;
+const A4_MAX_WIDTH_PX = 748;
+const A4_MAX_HEIGHT_PX = 960;
 
 export function applyA4PrintFit(): void {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+
   const root = document.documentElement;
   root.classList.add('a4-measure');
 
@@ -13,9 +18,12 @@ export function applyA4PrintFit(): void {
   sheets.forEach((sheet) => {
     sheet.dataset.origZoom = sheet.style.zoom || '';
     sheet.dataset.origWidth = sheet.style.width || '';
+    sheet.dataset.origMaxWidth = sheet.style.maxWidth || '';
 
+    // Measure natural compact print-CSS height at standard A4 printable width
     sheet.style.zoom = '1';
     sheet.style.width = `${A4_MAX_WIDTH_PX}px`;
+    sheet.style.maxWidth = 'none';
 
     const h = sheet.scrollHeight;
     const w = sheet.scrollWidth;
@@ -42,7 +50,9 @@ export function clearA4PrintFit(): void {
   sheets.forEach((sheet) => {
     sheet.style.zoom = sheet.dataset.origZoom ?? '';
     sheet.style.width = sheet.dataset.origWidth ?? '';
+    sheet.style.maxWidth = sheet.dataset.origMaxWidth ?? '';
     delete sheet.dataset.origZoom;
     delete sheet.dataset.origWidth;
+    delete sheet.dataset.origMaxWidth;
   });
 }

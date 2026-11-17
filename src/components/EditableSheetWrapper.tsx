@@ -1,6 +1,8 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { Printer, RotateCcw, ImagePlus } from 'lucide-react';
+import { Printer, RotateCcw, ImagePlus, FileDown, Loader2 } from 'lucide-react';
 import { MDMState, TabId } from '../types/mdm';
+import { TAB_TITLES } from './Sidebar';
+import { downloadSheetsAsPdf } from '../utils/pdfExport';
 
 interface EditableSheetWrapperProps {
   tabId: TabId;
@@ -28,6 +30,7 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
   const pendingRef = useRef<Record<string, string>>({});
   const onUpdateRef = useRef(onUpdateState);
   const [resetSeq, setResetSeq] = useState(0);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   m3Ref.current = state.m3 || {};
   onUpdateRef.current = onUpdateState;
@@ -139,6 +142,30 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
     setTimeout(() => window.print(), 20);
   };
 
+  const handleDownloadPdf = async () => {
+    if (!sheetRef.current || downloadingPdf) return;
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    const pending = pendingRef.current;
+    if (Object.keys(pending).length > 0) {
+      pendingRef.current = {};
+      onUpdateState((prev) => ({
+        ...prev,
+        m3: { ...(prev.m3 || {}), ...pending },
+      }));
+    }
+    setDownloadingPdf(true);
+    try {
+      const slug = (TAB_TITLES[tabId] || `Sheet_${tabId}`)
+        .replace(/[^a-zA-Z0-9]+/g, '_')
+        .replace(/^_|_$/g, '');
+      await downloadSheetsAsPdf(`${slug}_${state.cur}.pdf`, sheetRef.current);
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
+
   const resetEdits = () => {
     pendingRef.current = {};
     const pre = `${state.cur}|${tabId}|`;
@@ -183,6 +210,21 @@ export const EditableSheetWrapper: React.FC<EditableSheetWrapperProps> = ({
           >
             <Printer className="w-3.5 h-3.5" />
             <span>Print this sheet (1 page)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDownloadPdf}
+            disabled={downloadingPdf}
+            className="h-9 px-3.5 inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 disabled:opacity-60 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap"
+            title="Directly download this sheet as an A4 narrow-margin PDF"
+          >
+            {downloadingPdf ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <FileDown className="w-3.5 h-3.5" />
+            )}
+            <span>{downloadingPdf ? 'Creating PDF...' : 'Download PDF'}</span>
           </button>
 
           {showLogoUploads && (

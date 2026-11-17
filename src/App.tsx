@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Download,
   FileDown,
+  Loader2,
   Menu,
   Moon,
   Printer,
   Sun,
   ChevronDown,
 } from 'lucide-react';
+import { downloadSheetsAsPdf } from './utils/pdfExport';
 import { PWAInstallButton } from './components/PWAInstallButton';
 import { OfflineIndicator } from './components/OfflineIndicator';
 import { MDMState, TabId } from './types/mdm';
@@ -72,6 +74,7 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [exportPack, setExportPack] = useState<ExportPackType | null>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -533,14 +536,43 @@ export default function App() {
               </div>
 
               {PRINTABLE_TABS.has(activeTab) && (
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="hidden sm:inline-flex h-9 px-3.5 items-center gap-2 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap"
-                >
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Print Sheet</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    disabled={downloadingPdf}
+                    onClick={async () => {
+                      if (downloadingPdf) return;
+                      setDownloadingPdf(true);
+                      try {
+                        const slug = (TAB_TITLES[activeTab] || `Sheet_${activeTab}`)
+                          .replace(/[^a-zA-Z0-9]+/g, '_')
+                          .replace(/^_|_$/g, '');
+                        await downloadSheetsAsPdf(`${slug}_${state.cur}.pdf`);
+                      } finally {
+                        setDownloadingPdf(false);
+                      }
+                    }}
+                    className="h-9 px-3 items-center gap-1.5 inline-flex rounded-md bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 disabled:opacity-60 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap"
+                    title="Directly download this sheet as an A4 narrow-margin PDF"
+                  >
+                    {downloadingPdf ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <FileDown className="w-3.5 h-3.5" />
+                    )}
+                    <span className="hidden sm:inline">
+                      {downloadingPdf ? 'Creating...' : 'Download PDF'}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="hidden sm:inline-flex h-9 px-3.5 items-center gap-2 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm transition-all whitespace-nowrap"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Print Sheet</span>
+                  </button>
+                </>
               )}
             </div>
           </div>

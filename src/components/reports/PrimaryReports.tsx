@@ -616,7 +616,7 @@ export const PMPoshanReportSheet: React.FC<SheetProps> = ({ state }) => {
             <td />
             <td />
           </tr>
-          <tr style={{ height: '56px' }}>
+          <tr className="tall-amt-row" style={{ height: '56px' }}>
             <td className="l">ଖର୍ଚ୍ଚ</td>
             <td style={{ fontSize: '14px' }}>{f3(R.rice)}</td>
             <td className="l">ଖର୍ଚ୍ଚ</td>
@@ -1035,7 +1035,7 @@ export const LaddooReportSheet: React.FC<{
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr className="tall-amt-row">
             {vals.map((v, i) => (
               <td key={i} style={{ fontSize: '18px', height: '68px' }}>
                 {v}
